@@ -1,6 +1,8 @@
 // let brushStrokes
 // let numPoints = 20;
-let MIDI_MODE = true
+let MIDI_MODE = false
+
+let WAVE_CHAIN_MODE = true
 
 //Fonts
 let dudler, emeritus;
@@ -71,13 +73,24 @@ function createRingBuffer (length) {
 		return buffer[pointer];
 	},
     push : function(item){
-      buffer[pointer] = item;
-      pointer = (length + pointer +1) % length;
+      	buffer[pointer] = item;
+      	// pointer = (length + pointer +1) % length;
+      	pointer = (pointer +1) % length;
     },
 	inc : function(item){
-      pointer = (length + pointer +1) % length;
+      	// pointer = (length + pointer +1) % length;
+      	pointer = (pointer +1) % length;
 	},
-	log_buffer : function() {
+	get_trail: function(trailLength=null){
+		if (!trailLength) {
+			trailLength = buffer.length / 4
+		}
+	 	return buffer.slice((pointer - trailLength) % length, pointer)
+	},
+	get_buffer: function(){
+		return buffer
+	},
+	log_buffer : function(){
 		console.log(buffer)
 	}
   };
@@ -199,7 +212,17 @@ function draw() {
 		exciter_history.push(exciters_deep_copy)
 		// exciter_history.push(structuredClone(exciters))
 	} else {
+		// Draw exciter history 
+		exciter_frames = exciter_history.get_trail()
+		// exciter_frames = exciter_history.get_buffer()
+		for(let exciter_frame of exciter_frames) {
+			for (let exciter of exciter_frame) {
+				exciter.show(true)
+			}
+		}
+		// Draw current exciter
 		exciters = exciter_history.get()
+		// console.log(exciters)
 		for (let exciter of exciters) {
 			exciter.show()	
 		}
@@ -267,7 +290,11 @@ function mousePressed() {
 class Exciter {
 	constructor(x, y, lifetime) {
 		this.pos = createVector(x, y)
-		this.vel = p5.Vector.random2D()
+		if (WAVE_CHAIN_MODE) {
+			this.vel = createVector(0, 0) 
+		} else {
+			this.vel = p5.Vector.random2D()
+		}
 		this.acc = createVector(0, 0)
 		this.lifetime = lifetime
 	}
@@ -285,7 +312,11 @@ class Exciter {
 			this.pos.y = height - 40
 			if (this.vel.y > 2) {
 				// this.vel.x = random(5, -5)
-				this.vel.x = random(-this.vel.y * 0.5, this.vel.y * 0.5)
+				if (WAVE_CHAIN_MODE) {
+					this.vel.x = 0
+				} else {
+					this.vel.x = random(-this.vel.y * 0.5, this.vel.y * 0.5)
+				}
 			} else {
 				this.vel.x = 0
 			}
@@ -313,10 +344,15 @@ class Exciter {
 		this.lifetime -= 1
 	}
 
-	show() {
+	show(held=false) {
 		// fill(255)
-		stroke(255, this.lifetime);
-		strokeWeight(1)
+		if (held) {
+			stroke(255, 0.5 * this.lifetime);
+			strokeWeight(0.1)
+		} else {
+			stroke(255, this.lifetime);
+			strokeWeight(1)
+		}
 		ellipse(this.pos.x, this.pos.y, 10, 10)
 	}
 }
