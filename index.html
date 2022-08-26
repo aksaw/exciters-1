@@ -3,20 +3,29 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>sound-experiment-2</title>
-		<script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/p5.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/addons/p5.sound.min.js"></script>
-		<!-- <script src="../libraries/p5.sound.js"></script> -->
+		<title>DAWN</title>
+		<script src="node_modules/p5/lib/p5.min.js"></script>
+		<script src="node_modules/p5/lib/addons/p5.sound.min.js"></script>
 		<script defer src="https://unpkg.com/p5.collide2d"></script>
     	<script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
-		<script src="sketch.js"></script>
+		<!-- <script type="module" src="node_modules/ecsy/build/ecsy.module.js"></script> -->
+		<script type="module" src="main.js"></script>
 		<style>
+			@font-face {
+			font-family: 'Dudler';
+			src: url('assets/Dudler-Regular.woff') format("woff");
+			}
+
 			body {
 				margin: 0;
 				padding: 0;
+				user-select:none;
 			}
 			canvas {
 				margin: auto;
+			}
+			body {
+				overflow: hidden; /* Hide scrollbars */
 			}
 		</style>
 	</head>
