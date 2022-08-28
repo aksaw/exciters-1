@@ -6,7 +6,7 @@ export class GeometryComponent extends Component { }
 GeometryComponent.schema = {
     // TODO: Separate out position component (entity can have position but no shape, eg. spigot)
     // TODO: Create a separate RenderableTagComponent (entity can have position & geometry but be invisible)
-    pos: { type: Vec2Type },
+    pos: { type: Vec2Type }, // TODO: make pos the center rather than top left corner of rectangle
     primitive: { type: Types.String, default: 'rectangle' }, // 'rectangle', 'ellipse'
     width: { type: Types.Number },
     height: { type: Types.Number },
@@ -54,6 +54,9 @@ ExciterComponent.schema = {
 
 export class ResonatorComponent extends Component { }
 ResonatorComponent.schema = {
+    // TODO: add excitation levels like energy levels of an atom
+    // Depending on which energy levels are poopulated, different notes are played
+    // Ground state excitation = root note, First excitation state = minor third, etc.
     isExcited: { type: Types.Boolean },
     resonationStrength: { type: Types.Number }, // [0,1]
 
@@ -68,12 +71,29 @@ ResonatorComponent.schema = {
 // Spigot component
 export class SpigotComponent extends Component { }
 SpigotComponent.schema = {
-        
+    // TODO
 }
 
-// Attractor component
+// Attraction components
+export class AttractorComponent extends Component { }
+AttractorComponent.schema = {
+    orbitThreshold: { type: Types.Number },
+    numOrbiters: { type: Types.Number },
+    resonators:  { type: Types.Array } // TODO: Make sure it is sound to have entities in a component
+}
+
+export class OrbiterComponent extends Component { }
+OrbiterComponent.schema = {
+    orbitLocked: { type: Types.Boolean }
+}
+
+export class GravitatorComponent extends TagComponent { }
 
 // Context Components
+export class PhysicsContextComponent extends Component { }
+PhysicsContextComponent.schema = {
+}
+
 export class MidiContextComponent extends Component { }
 MidiContextComponent.schema = {
     availableOutputs: {type: Types.Array},
@@ -92,3 +112,6 @@ WorldStateContextComponent.schema = {
 
 // View Components
 export class RenderableComponent extends TagComponent {}
+
+
+// UI Components

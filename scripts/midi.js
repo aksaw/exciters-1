@@ -13,3 +13,4 @@ export var notes = [
     new Note('A', 57),
     new Note('C#', 61),
 ]
+

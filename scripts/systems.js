@@ -2,8 +2,10 @@ import { System } from '../node_modules/ecsy/build/ecsy.module.min.js';
 import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
-    RenderableComponent, WorldStateContextComponent
+    RenderableComponent, WorldStateContextComponent, OrbiterComponent, AttractorComponent,
+    GravitatorComponent
 } from './components.js';
+import { Vec2 } from './types.js';
 
 // Main Engine =================================================================
 
@@ -18,7 +20,6 @@ export class KinematicsSystem extends System {
             let kinematics = entity.getMutableComponent(KinematicsComponent)
             geometry.pos.add(kinematics.vel)
             kinematics.vel.add(kinematics.acc)
-            kinematics.acc.set(0, 0.5)
 
             // TODO: Bounce or wrap around horizontal edges based on a global context component
             // Bounce off at the boundary edges
@@ -33,10 +34,24 @@ KinematicsSystem.queries = {
     entities: { components: [GeometryComponent, KinematicsComponent] },
 };
 
+// GravitatorSystem
+export class GravitatorSystem extends System {
+    execute(delta) {
+        let entities = this.queries.entities.results;
+        for (let entity of entities) {
+            let kinematics = entity.getMutableComponent(KinematicsComponent)
+            kinematics.acc.set(0, 0.5)
+        }
+    }
+}
+GravitatorSystem.queries = {
+    entities: { components: [GravitatorComponent, KinematicsComponent] },
+};
+
+
 // LoopSystem
 export class LoopSystem extends System {
     execute(delta) {
-
         let worldStateContext = this.queries.context.results[0].getComponent(WorldStateContextComponent);
         if (mouseIsPressed) { // TODO: Move this section into a separate system
             // TOOD: move mouseX and mouseY into a context component
@@ -164,19 +179,100 @@ ExciterResonatorSystem.queries = {
 // ExciterExciterSystem
 //      Manages exciter-exciter interactions (eg. collisions, attractor, repeller)
 
+
+// OrbiterAttractorSystem
+//      Manages orbiter-attractor interactions
+// TODO: Figure out division of responsibilities between this and ExciterResonatorSystem
+//  or consolidate the two sytems. 
+export class  OrbiterAttractorSystem extends System {
+    execute(delta) {
+        let orbiters = this.queries.orbiters.results;
+        let attractors = this.queries.attractors.results;
+        for (let attractor of attractors) {
+            let attractor_geo = attractor.getComponent(GeometryComponent);
+            let attractor_att = attractor.getComponent(AttractorComponent);
+            attractor_att.numOrbiters = 0
+            for (let orbiter of orbiters) {
+                let orbiter_geo = orbiter.getMutableComponent(GeometryComponent);
+                let orbiter_orb = orbiter.getMutableComponent(OrbiterComponent);
+                let orbiter_kin = orbiter.getMutableComponent(KinematicsComponent);
+                if (this.distance(orbiter_geo.pos, attractor_geo.pos) <= attractor_att.orbitThreshold) {
+                    attractor_att.numOrbiters += 1
+
+                    orbiter_orb.orbitLocked = true
+                    let speed = this.norm(orbiter_kin.vel)
+                    let direction = this.normalized(this.rotatedPI(this.subtract(attractor_geo.pos, orbiter_geo.pos)))
+                    orbiter_kin.vel.x = speed * direction.x
+                    orbiter_kin.vel.y = speed * direction.y
+                }
+            }
+            for (let i = 0; i < attractor_att.resonators.length; i++) {
+                let res = attractor_att.resonators[i].getMutableComponent(ResonatorComponent)
+                if (i < attractor_att.numOrbiters) {
+                    res.isExcited = true
+                    res.resonationStrength = 1
+                } else {
+                    res.isExcited = false
+                    res.resonationStrength *= 0.8
+                }
+            }
+        }
+    }
+
+    // TODO: move vector operations into the vector class or a util library
+    distance(vec1, vec2) {
+        return Math.sqrt((vec2.x - vec1.x)**2 + (vec2.y - vec1.y)**2)
+    }
+
+    subtract(vec1, vec2) {
+        return new Vec2(vec1.x - vec2.x, vec1.y - vec2.y)
+    }
+
+    norm(vec) {
+        return Math.sqrt(vec.x**2 + vec.y**2)
+    }
+
+    normalized(vec) {
+        let n = this.norm(vec)
+        return new Vec2(vec.x/n, vec.y/n)
+    }
+
+    rotatedPI(vec) {
+        return new Vec2(-vec.y, vec.x)
+    }
+}
+OrbiterAttractorSystem.queries = {
+    orbiters: { components: [OrbiterComponent, ExciterComponent, GeometryComponent, KinematicsComponent] },
+    attractors: { components: [AttractorComponent, GeometryComponent] }
+};
+
+
+
 // Event Handling Systems ======================================================
 
 // Resize System
 // TODO: Generalize logic. Current implementation is hacky.
 //      Save old window dimensions in global context, use that to resize entities, then update the global context 
 export class ResizeSystem extends System {
+    init() {
+        this.prevWindowWidth = windowWidth;
+        this.prevWindowHeight = windowHeight;
+    }
     execute() {
         let entities = this.queries.entities.results;
         for (let i = 0; i < entities.length; i++) {
             let geometry = entities[i].getMutableComponent(GeometryComponent)
-            geometry.width = window.width / window.N // Note: window.N should be in a context entity; context change should trigger this system
-            geometry.pos.set((window.width / N * i), (window.height - 40))
+            geometry.pos.x = geometry.pos.x * windowWidth / this.prevWindowWidth
+            // TODO: update orbiter position as well
+            if (geometry.primitive == 'rectangle')
+                geometry.width = geometry.width * windowWidth / this.prevWindowWidth
+            // geometry.height = geometry.height * windowHeight / prevWindowHeight
+            // geometry.pos.y = geometry.pos.y * windowWidth / prevWindowWidth
+            // geometry.width = window.width / window.N // Note: window.N should be in a context entity; context change should trigger this system
+            // geometry.pos.set((window.width / N * i), (window.height - 40))
         }
+        this.prevWindowWidth = windowWidth;
+        this.prevWindowHeight = windowHeight;
     }
 }
 
@@ -211,6 +307,10 @@ export class MidiOutSystem extends System {
     }
 
     execute(delta) {
+        if (!WebMidi.enabled) {
+            return
+        }
+
         if (this.queries.context.changed.length > 0 || !this.midiOut) {
             let midiContext = this.queries.context.results[0].getComponent(MidiContextComponent)
             this.midiOut = WebMidi.getOutputByName(midiContext.output);
@@ -230,10 +330,11 @@ export class MidiOutSystem extends System {
                 } else { // Resonator is not solid
                     if (resonator.isExcited) {
                         this.midiOut.channels[1].sendNoteOn(
-                            resonator.note.val, { attack: resonator.resonationStrength });
+                            resonator.note.value, { attack: resonator.resonationStrength });
                     } else {
+                        // console.log("noteoff")
                         this.midiOut.channels[1].sendNoteOff(
-                            resonator.note.val, { attack: resonator.resonationStrength });
+                            resonator.note.value, { attack: resonator.resonationStrength });
                     }
                 }
             }
@@ -307,7 +408,11 @@ export class P5RendererSystem extends System {
             fill(255 * (1 - res.resonationStrength))
             textSize(16)
             textFont(window.Fonts.dudler)
-            text(res.note.name, geo.pos.x + 10, geo.pos.y + 26) // TODO: parameterize text positioning
+            if (geo.primitive == 'ellipse') {
+                text(res.note.name, geo.pos.x - 5, geo.pos.y + 8) 
+            } else {
+                text(res.note.name, geo.pos.x + 10, geo.pos.y + 26)
+            }
         }
 
         // Render loop sign if loopMode is activated

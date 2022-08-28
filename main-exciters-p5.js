@@ -2,11 +2,11 @@ import { World, System } from './node_modules/ecsy/build/ecsy.module.min.js';
 import {
 	GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
 	ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
-	RenderableComponent, WorldStateContextComponent
+	RenderableComponent, WorldStateContextComponent, GravitatorComponent
 } from './scripts/components.js';
 import {
 	KinematicsSystem, LifetimeSystem, P5RendererSystem, ExciterResonatorSystem,
-	ResizeSystem, MidiOutSystem, LoopSystem
+	ResizeSystem, MidiOutSystem, LoopSystem, GravitatorSystem
 } from './scripts/systems.js';
 import { Vec2 } from './scripts/types.js';
 import { notes } from './scripts/midi.js';
@@ -35,6 +35,7 @@ window.setup = function () {
 		.registerComponent(ExciterComponent)
 		.registerComponent(ResonatorComponent)
 		.registerComponent(KinematicsComponent)
+		.registerComponent(GravitatorComponent)
 		.registerComponent(HistoryComponent)
 		.registerComponent(MidiContextComponent)
 		.registerComponent(RenderableComponent)
@@ -45,6 +46,7 @@ window.setup = function () {
 		.registerSystem(P5RendererSystem)
 		.registerSystem(LifetimeSystem)
 		.registerSystem(KinematicsSystem)
+		.registerSystem(GravitatorSystem)
 		.registerSystem(ExciterResonatorSystem)
 		.registerSystem(MidiOutSystem)
 		.registerSystem(ResizeSystem)
@@ -116,7 +118,7 @@ window.mouseDragged = function () {
 			trailEntity.getMutableComponent(CurveComponent).vertices.push(new Vec2(mouseX, mouseY))
 			trailEntity.getMutableComponent(LifetimeComponent).percentage = 100
 
-			if (mouseX % 5 == 0) {
+			if (mouseX % 6 == 0) {
 				createExciterEntity(mouseX, mouseY, 10, 'ellipse')
 			}
 		}
@@ -157,6 +159,7 @@ function createExciterEntity(x, y, size = 10, primitive = 'ellipse') {
 		})
 		.addComponent(KinematicsComponent, {
 		})
+		.addComponent(GravitatorComponent)
 		.addComponent(LifetimeComponent)
 		.addComponent(ExciterComponent)
 		.addComponent(RenderableComponent)
