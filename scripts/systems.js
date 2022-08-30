@@ -266,6 +266,7 @@ export class ResizeSystem extends System {
             // TODO: update orbiter position as well
             if (geometry.primitive == 'rectangle')
                 geometry.width = geometry.width * windowWidth / this.prevWindowWidth
+                geometry.pos.y = (geometry.pos.y + geometry.height) * windowHeight / this.prevWindowHeight - geometry.height // Hacky
             // geometry.height = geometry.height * windowHeight / prevWindowHeight
             // geometry.pos.y = geometry.pos.y * windowWidth / prevWindowWidth
             // geometry.width = window.width / window.N // Note: window.N should be in a context entity; context change should trigger this system

@@ -93,7 +93,7 @@ window.setup = function () {
 			pos: new Vec2((window.width / 2), (window.height / 2))
 		})
 		.addComponent(AttractorComponent, {
-			orbitThreshold: 250,
+			orbitThreshold: 500,
 			resonators: resonators
 		})
 
@@ -158,7 +158,7 @@ function createOrbiterEntity(x, y, size = 10, primitive = 'ellipse') {
 			pos: new Vec2(x, y)
 		})
 		.addComponent(KinematicsComponent, {
-			vel: new Vec2(5 * Math.random(), 5 * Math.random())
+			vel: new Vec2(10 * Math.random() - 5, 10 * Math.random() - 5)
 		})
 		.addComponent(LifetimeComponent, {
 			decayRate: 0.2
