@@ -9,7 +9,7 @@ import {
 	ResizeSystem, MidiOutSystem, LoopSystem, OrbiterAttractorSystem
 } from './scripts/systems.js';
 import { Vec2 } from './scripts/types.js';
-import { notes } from './scripts/midi.js';
+import { notes, chord_d_minor, chord_e_minor } from './scripts/midi.js';
 
 let world, worldContext;
 let lastTime, currTime, delta;
@@ -66,18 +66,18 @@ window.setup = function () {
 
 	// Create resonator entities
 	let resonators = []
-	for (let i = 0; i < 3; i++) {
+	for (let i = 0; i < chord_d_minor.length; i++) {
 		resonators.push(
 			world.createEntity()
 				.addComponent(GeometryComponent, {
 					primitive: 'ellipse',
 					width: 60,
 					height: 60,
-					pos: new Vec2((window.width / 2), (window.height / 2))
+					pos: new Vec2((window.width / 3), (window.height / 3))
 				})
 				.addComponent(ResonatorComponent, {
 					isSolid: false,
-					note: notes[i]
+					note: chord_d_minor[i]
 				})
 				.addComponent(AttractorComponent, {
 					orbitThreshold: 250
@@ -90,10 +90,43 @@ window.setup = function () {
 			primitive: 'ellipse',
 			width: 0,
 			height: 0,
-			pos: new Vec2((window.width / 2), (window.height / 2))
+			pos: new Vec2((window.width / 3), (window.height / 3))
 		})
 		.addComponent(AttractorComponent, {
-			orbitThreshold: 500,
+			orbitThreshold: 200,
+			resonators: resonators
+		})
+
+	// Create resonator entities
+	resonators = []
+	for (let i = 0; i < chord_d_minor.length; i++) {
+		resonators.push(
+			world.createEntity()
+				.addComponent(GeometryComponent, {
+					primitive: 'ellipse',
+					width: 60,
+					height: 60,
+					pos: new Vec2((2 * window.width / 3), (2 * window.height / 3))
+				})
+				.addComponent(ResonatorComponent, {
+					isSolid: false,
+					note: chord_e_minor[i]
+				})
+				.addComponent(AttractorComponent, {
+					orbitThreshold: 250
+				})
+		)
+	}
+	resonators[0].addComponent(RenderableComponent)
+	world.createEntity()
+		.addComponent(GeometryComponent, {
+			primitive: 'ellipse',
+			width: 0,
+			height: 0,
+			pos: new Vec2((2 * window.width / 3), (2 * window.height / 3))
+		})
+		.addComponent(AttractorComponent, {
+			orbitThreshold: 200,
 			resonators: resonators
 		})
 
