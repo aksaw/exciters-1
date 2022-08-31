@@ -8,7 +8,7 @@ import {
 	KinematicsSystem, LifetimeSystem, P5RendererSystem, ExciterResonatorSystem,
 	ResizeSystem, MidiOutSystem, LoopSystem, OrbiterAttractorSystem
 } from './scripts/systems.js';
-import { Vec2 } from './scripts/types.js';
+import { Vec2, Note } from './scripts/types.js';
 import { notes, chord_d_minor, chord_e_minor } from './scripts/midi.js';
 
 let world, worldContext;
@@ -47,11 +47,11 @@ window.setup = function () {
 		.registerSystem(P5RendererSystem)
 		.registerSystem(LifetimeSystem)
 		.registerSystem(KinematicsSystem)
-		.registerSystem(MidiOutSystem)
 		.registerSystem(ResizeSystem)
 		.registerSystem(LoopSystem)
-		.registerSystem(ExciterResonatorSystem)
+		// .registerSystem(ExciterResonatorSystem)
 		.registerSystem(OrbiterAttractorSystem)
+		.registerSystem(MidiOutSystem)
 
 	// Stop systems that do not need to run continuously
 	world.getSystem(ResizeSystem).stop()
@@ -64,23 +64,20 @@ window.setup = function () {
 		.addComponent(WorldStateContextComponent)
 	// TODO: Create some kind of InputSystem or UISystem that populates context based on menu settings?
 
-	// Create resonator entities
+	// Create attractor A
 	let resonators = []
 	for (let i = 0; i < chord_d_minor.length; i++) {
 		resonators.push(
 			world.createEntity()
 				.addComponent(GeometryComponent, {
 					primitive: 'ellipse',
-					width: 60,
-					height: 60,
+					width: 80,
+					height: 80,
 					pos: new Vec2((window.width / 3), (window.height / 3))
 				})
 				.addComponent(ResonatorComponent, {
 					isSolid: false,
 					note: chord_d_minor[i]
-				})
-				.addComponent(AttractorComponent, {
-					orbitThreshold: 250
 				})
 		)
 	}
@@ -93,27 +90,25 @@ window.setup = function () {
 			pos: new Vec2((window.width / 3), (window.height / 3))
 		})
 		.addComponent(AttractorComponent, {
-			orbitThreshold: 200,
+			orbitLockRadius: 150,
+			resonationRadius: 250,
 			resonators: resonators
 		})
 
-	// Create resonator entities
+	// Create attractor B
 	resonators = []
 	for (let i = 0; i < chord_d_minor.length; i++) {
 		resonators.push(
 			world.createEntity()
 				.addComponent(GeometryComponent, {
 					primitive: 'ellipse',
-					width: 60,
-					height: 60,
+					width: 80,
+					height: 80,
 					pos: new Vec2((2 * window.width / 3), (2 * window.height / 3))
 				})
 				.addComponent(ResonatorComponent, {
 					isSolid: false,
-					note: chord_e_minor[i]
-				})
-				.addComponent(AttractorComponent, {
-					orbitThreshold: 250
+					note: new Note(chord_e_minor[i].name, chord_e_minor[i].value - 12)
 				})
 		)
 	}
@@ -126,7 +121,8 @@ window.setup = function () {
 			pos: new Vec2((2 * window.width / 3), (2 * window.height / 3))
 		})
 		.addComponent(AttractorComponent, {
-			orbitThreshold: 200,
+			orbitLockRadius: 150,
+			resonationRadius: 250,
 			resonators: resonators
 		})
 
@@ -194,12 +190,12 @@ function createOrbiterEntity(x, y, size = 10, primitive = 'ellipse') {
 			vel: new Vec2(10 * Math.random() - 5, 10 * Math.random() - 5)
 		})
 		.addComponent(LifetimeComponent, {
-			decayRate: 0.2
+			decayRate: 0.01
 		})
 		.addComponent(RenderableComponent)
 		.addComponent(HistoryComponent, {
 			length: 120
 		})
-		.addComponent(ExciterComponent)
+		.addComponent(ExciterComponent) // TODO: orbiters don't need to be exciters
 		.addComponent(OrbiterComponent)
 }

@@ -77,14 +77,15 @@ SpigotComponent.schema = {
 // Attraction components
 export class AttractorComponent extends Component { }
 AttractorComponent.schema = {
-    orbitThreshold: { type: Types.Number },
+    orbitLockRadius : { type: Types.Number },
     numOrbiters: { type: Types.Number },
+    resonationRadius : { type: Types.Number },
     resonators:  { type: Types.Array } // TODO: Make sure it is sound to have entities in a component
 }
 
 export class OrbiterComponent extends Component { }
 OrbiterComponent.schema = {
-    orbitLocked: { type: Types.Boolean }
+    // orbitLocked: { type: Types.Boolean }
 }
 
 export class GravitatorComponent extends TagComponent { }
