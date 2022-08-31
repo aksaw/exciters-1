@@ -350,8 +350,9 @@ export class MidiOutSystem extends System {
             return
         }
 
-        if (this.queries.context.changed.length > 0 || !this.midiOut) {
+        if (this.queries.context.changed.length > 0) {
             let midiContext = this.queries.context.results[0].getComponent(MidiContextComponent)
+            console.log(midiContext.output)
             this.midiOut = WebMidi.getOutputByName(midiContext.output);
         }
 
@@ -475,8 +476,6 @@ export class P5RendererSystem extends System {
 
         // Render loop sign if loopMode is activated
         let worldStateContext = this.queries.context.results[0].getComponent(WorldStateContextComponent);
-        console.log(this.queries.context.results[0].getComponents())
-        console.log(this.queries.context.results[0].getComponent(MidiContextComponent))
         if (worldStateContext.loopMode) {
             fill(255)
             ellipse(mouseX, mouseY, 60, 60)

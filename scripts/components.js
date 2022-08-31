@@ -97,8 +97,6 @@ PhysicsContextComponent.schema = {
 
 export class MidiContextComponent extends Component { }
 MidiContextComponent.schema = {
-    availableOutputs: {type: Types.Array},
-    availableInputs: {type: Types.Array},
     output: {type: Types.String},
     input: {type: Types.String},
 }

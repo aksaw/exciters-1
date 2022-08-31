@@ -48,13 +48,13 @@ export function createWorld() {
     // Stop systems that do not need to run continuously
     world.getSystem(ResizeSystem).stop()
 
-
     // Create global context singleton entity
     worldContext = world.createEntity()
         .addComponent(MidiContextComponent, {
             output: 'loopMIDI Port 1'
         })
         .addComponent(WorldStateContextComponent)
+    world.worldContext = worldContext
     // TODO: Create some kind of InputSystem that populates context based on menu settings?
 
     // Create resonator entities

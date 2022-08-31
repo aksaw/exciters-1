@@ -10,7 +10,7 @@ import {
     ResizeSystem, MidiOutSystem, LoopSystem, OrbiterAttractorSystem
 } from './scripts/systems.js';
 import { Vec2, Note } from './scripts/types.js';
-import { notes, chord_d_minor, chord_e_minor } from './scripts/midi.js';
+import { chord_d_minor, chord_e_minor } from './scripts/midi.js';
 
 let world, worldContext;
 
@@ -52,6 +52,7 @@ export function createWorld() {
             output: 'loopMIDI Port 1'
         })
         .addComponent(WorldStateContextComponent)
+    world.worldContext = worldContext
     // TODO: Create some kind of InputSystem or UISystem that populates context based on menu settings?
 
     // Create attractor A

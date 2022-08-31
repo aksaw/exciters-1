@@ -1,4 +1,5 @@
 import { ResizeSystem } from './scripts/systems.js';
+import { MidiContextComponent } from './scripts/components.js';
 import { createWorld as createAttractorsWorld } from './attractors.js'
 import { createWorld as createExcitersWorld } from './exciters.js'
 
@@ -29,7 +30,7 @@ window.setup = function () {
         attractors: attractorsWorld,
         exciters: excitersWorld,
     }
-    
+
     world = worlds.exciters
     world.play()
 
@@ -54,7 +55,13 @@ function onMidiEnabled() {
 
     // Outputs
     console.log("Output MIDI ports:")
-    WebMidi.outputs.forEach(output => console.log(output.manufacturer, output.name));
+    let midiOutSelect = document.getElementById('midiout-select');
+    for (let output of WebMidi.outputs) {
+        let opt = document.createElement('option');
+        opt.value = output.name;
+        opt.innerHTML = output.name;
+        midiOutSelect.appendChild(opt);
+    }
 }
 
 // Browser Events ==============================================================
@@ -100,4 +107,9 @@ document.getElementById('worlds').onchange = function () {
     if (this.value == 'exciters')
         world = worlds.exciters
     world.play()
+};
+
+document.getElementById('midiout-select').onchange = function () {
+    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = this.value
 };
