@@ -33,19 +33,24 @@
 			overflow: hidden;
 			/* Hide scrollbars */
 		}
+
+		.absolute-pos {
+			position: absolute;
+			/* top: 40px; left: 40px;*/
+		}
 	</style>
 </head>
 
 <body>
 	<div>
-		<select name="worlds" id="worlds">
+		<select name="worlds" id="worlds" style="position:absolute; top:40px; left:40px;">
 			<option value="exciters">EXCITERS</option>
 			<option value="attractors">ATTRACTORS</option>
 		</select>
 	</div>
 
 	<div>
-		<select name="midiout-select" id="midiout-select"></select>
+		<select name="midiout-select" id="midiout-select"  style="position:absolute; top:40px; right:40px;"></select>
 	</div>
 </body>
 
