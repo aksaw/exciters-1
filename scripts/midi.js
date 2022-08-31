@@ -14,6 +14,8 @@ export var notes = [
     new Note('C#', 61),
 ]
 
+// TODO: create library to algorithmically generate
+// musical objects like chords and scales
 export var chord_d_minor = [
     new Note('D', 62),
     new Note('F', 65),

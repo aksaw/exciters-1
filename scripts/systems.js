@@ -307,7 +307,6 @@ OrbiterAttractorSystem.queries = {
 };
 
 
-
 // Event Handling Systems ======================================================
 
 // Resize System
@@ -346,27 +345,6 @@ ResizeSystem.queries = {
 
 // MidiOutSystem
 export class MidiOutSystem extends System {
-    init() {
-        if (!WebMidi.enabled) {
-            WebMidi
-                .enable()
-                .then(this.onMidiEnabled)
-                .catch(err => alert(err));
-        }
-    }
-
-    onMidiEnabled() {
-        console.log("WebMidi enabled!")
-
-        // Inputs
-        console.log("Inputs:")
-        WebMidi.inputs.forEach(input => console.log(input.manufacturer, input.name));
-
-        // Outputs
-        console.log("Outputs:")
-        WebMidi.outputs.forEach(output => console.log(output.manufacturer, output.name));
-    }
-
     execute(delta) {
         if (!WebMidi.enabled) {
             return
@@ -427,10 +405,11 @@ export class P5RendererSystem extends System {
     execute(delta) {
         noStroke()
         background('Black')
-        fill(255)
-        textSize(48)
-        textFont(window.Fonts.emeritus)
-        text('DAWN', width - 200, 55)
+
+        // fill(255)
+        // textSize(48)
+        // textFont(window.Fonts.emeritus)
+        // text('DAWN', width - 200, 55)
 
         // Render mouse trails
         strokeWeight(2)
@@ -496,6 +475,8 @@ export class P5RendererSystem extends System {
 
         // Render loop sign if loopMode is activated
         let worldStateContext = this.queries.context.results[0].getComponent(WorldStateContextComponent);
+        console.log(this.queries.context.results[0].getComponents())
+        console.log(this.queries.context.results[0].getComponent(MidiContextComponent))
         if (worldStateContext.loopMode) {
             fill(255)
             ellipse(mouseX, mouseY, 60, 60)
