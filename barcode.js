@@ -1,4 +1,4 @@
-import { World, System } from './node_modules/ecsy/build/ecsy.module.min.js';
+import { World, System } from 'ecsy/build/ecsy.module.min.js';
 import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,

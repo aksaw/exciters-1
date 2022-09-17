@@ -18,16 +18,18 @@ export var notes = [
 // musical objects like chords and scales
 export var chord_d_minor = [
     new Note('D', 62),
-    new Note('F', 65),
+    // new Note('F', 65),
     new Note('A', 69),
-    new Note('C', 72),
-    new Note('E', 76),
+    // new Note('C', 72),
+    // new Note('E', 76),
+    // new Note('G', 79),
 ]
 
 export var chord_e_minor = [
     new Note('E', 64),
-    new Note('G', 67),
+    // new Note('G', 67),
     new Note('A#', 70),
-    new Note('D', 74),
+    // new Note('D', 74),
     new Note('F', 77),
+    // new Note('A', 81),
 ]

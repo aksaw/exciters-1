@@ -1,10 +1,13 @@
-import { ResizeSystem } from './scripts/systems.js';
+import { MidiOutSystem, P5RendererSystem } from './scripts/systems.js';
 import { MidiContextComponent } from './scripts/components.js';
-import { createWorld as createAttractorsWorld } from './attractors.js'
+import { createWorld as createAttractorsWorld } from './attractors2.js'
+// import { createWorld as createAttractorsWorld } from './attractors.js'
 import { createWorld as createExcitersWorld } from './exciters.js'
 
 let worlds, world;
 let lastTime, currTime, delta;
+
+let paused = true;
 
 window.Fonts = {}
 window.preload = function () {
@@ -31,17 +34,25 @@ window.setup = function () {
         exciters: excitersWorld,
     }
 
-    world = worlds.exciters
+    world = worlds.attractors
+    // world = worlds.exciters
     world.play()
 
+    // worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = "loopMIDI Port 1"
+
     lastTime = performance.now();
+    world.execute(0);
 }
 
 window.draw = function () {
-    currTime = performance.now();
-    delta = currTime - lastTime;
-    lastTime = currTime;
-    world.execute(delta);
+    if (!paused) {
+        currTime = performance.now();
+        delta = currTime - lastTime;
+        lastTime = currTime;
+        world.execute(delta);
+        // worlds.attractors.execute(delta);
+        // worlds.exciters.execute(delta);
+    }
 }
 
 // MIDI ========================================================================
@@ -74,6 +85,9 @@ function onMidiEnabled() {
 // context component, which then gets handled by a system 
 
 window.mouseClicked = function () {
+    if (paused) {
+        paused = false
+    }
     if (world) {
         world.mouseClicked()
     }
@@ -93,20 +107,22 @@ window.mousePressed = function () {
 
 window.windowResized = function () {
     resizeCanvas(windowWidth, windowHeight)
-    if (world) {
-        world.getSystem(ResizeSystem).execute()
-    }
+    worlds.attractors.getSystem(ResizeSystem).execute()
+    worlds.exciters.getSystem(ResizeSystem).execute()
 }
 
 // UI Events ===================================================================
 
 document.getElementById('worlds').onchange = function () {
-    world.stop()
+    // world.getSystem(MidiOutSystem).notesOff()
+    // world.stop()
+    world.getSystem(P5RendererSystem).stop()
     if (this.value == 'attractors')
         world = worlds.attractors
     if (this.value == 'exciters')
         world = worlds.exciters
-    world.play()
+    world.getSystem(P5RendererSystem).play()
+    // world.play()
 };
 
 document.getElementById('midiout-select').onchange = function () {

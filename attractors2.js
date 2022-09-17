@@ -40,8 +40,8 @@ export function createWorld() {
         .registerSystem(KinematicsSystem)
         .registerSystem(ResizeSystem)
         .registerSystem(LoopSystem)
-        .registerSystem(OrbiterAttractorSystem)
-        // .registerSystem(OrbiterAttractorV2System)
+        // .registerSystem(OrbiterAttractorSystem)
+        .registerSystem(OrbiterAttractorV2System)
         .registerSystem(MidiOutSystem)
 
     // Stop systems that do not need to run continuously
@@ -58,23 +58,23 @@ export function createWorld() {
 
     // Create attractor A
     let resonators = []
-    for (let i = 0; i < chord_d_minor.length; i++) {
-        resonators.push(
-            world.createEntity()
-                .addComponent(GeometryComponent, {
-                    primitive: 'ellipse',
-                    width: 80,
-                    height: 80,
-                    pos: new Vec2((window.width / 3), (window.height / 3))
-                })
-                .addComponent(ResonatorComponent, {
-                    isSolid: false,
-                    note: chord_d_minor[i]
-                    // note: new Note(chord_d_minor[i].name, chord_d_minor[i].value - 12)
-                })
-        )
-    }
-    resonators[0].addComponent(RenderableComponent)
+    // for (let i = 0; i < chord_d_minor.length; i++) {
+    //     resonators.push(
+    //         world.createEntity()
+    //             .addComponent(GeometryComponent, {
+    //                 primitive: 'ellipse',
+    //                 width: 80,
+    //                 height: 80,
+    //                 pos: new Vec2((window.width / 3), (window.height / 3))
+    //             })
+    //             .addComponent(ResonatorComponent, {
+    //                 isSolid: false,
+    //                 note: chord_d_minor[i]
+    //                 // note: new Note(chord_d_minor[i].name, chord_d_minor[i].value - 12)
+    //             })
+    //     )
+    // }
+    // resonators[0].addComponent(RenderableComponent)
     world.createEntity()
         .addComponent(GeometryComponent, {
             primitive: 'ellipse',
@@ -90,22 +90,22 @@ export function createWorld() {
 
     // Create attractor B
     resonators = []
-    for (let i = 0; i < chord_d_minor.length; i++) {
-        resonators.push(
-            world.createEntity()
-                .addComponent(GeometryComponent, {
-                    primitive: 'ellipse',
-                    width: 80,
-                    height: 80,
-                    pos: new Vec2((2 * window.width / 3), (2 * window.height / 3))
-                })
-                .addComponent(ResonatorComponent, {
-                    isSolid: false,
-                    note: new Note(chord_e_minor[i].name, chord_e_minor[i].value - 24)
-                })
-        )
-    }
-    resonators[0].addComponent(RenderableComponent)
+    // for (let i = 0; i < chord_d_minor.length; i++) {
+    //     resonators.push(
+    //         world.createEntity()
+    //             .addComponent(GeometryComponent, {
+    //                 primitive: 'ellipse',
+    //                 width: 80,
+    //                 height: 80,
+    //                 pos: new Vec2((2 * window.width / 3), (2 * window.height / 3))
+    //             })
+    //             .addComponent(ResonatorComponent, {
+    //                 isSolid: false,
+    //                 note: new Note(chord_e_minor[i].name, chord_e_minor[i].value - 24)
+    //             })
+    //     )
+    // }
+    // resonators[0].addComponent(RenderableComponent)
     world.createEntity()
         .addComponent(GeometryComponent, {
             primitive: 'ellipse',

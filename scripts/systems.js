@@ -306,6 +306,107 @@ OrbiterAttractorSystem.queries = {
     attractors: { components: [AttractorComponent, GeometryComponent] }
 };
 
+export class OrbiterAttractorV2System extends System {
+    execute(delta) {
+        let orbiters = this.queries.orbiters.results;
+        let attractors = this.queries.attractors.results;
+
+        // Determine orbits
+        for (let orbiter of orbiters) {
+            let orbiter_geo = orbiter.getMutableComponent(GeometryComponent);
+            let orbiter_orb = orbiter.getMutableComponent(OrbiterComponent);
+            let orbiter_kin = orbiter.getMutableComponent(KinematicsComponent);
+            orbiter_orb.orbitLocked = false
+
+            orbiter_kin.acc.set(0, 0)
+            for (let attractor of attractors) {
+                let attractor_geo = attractor.getComponent(GeometryComponent);
+                let attractor_att = attractor.getComponent(AttractorComponent);
+
+                let r = this.distance(orbiter_geo.pos, attractor_geo.pos)
+                let a = max(50 / r ** 2, 0.05)
+                let dir = this.normalized(this.subtract(attractor_geo.pos, orbiter_geo.pos))
+                orbiter_kin.acc.set(orbiter_kin.acc.x + a * dir.x, orbiter_kin.acc.y + a * dir.y)
+                // orbiter_kin.acc.set(0, 0.5)
+                // console.log(a)
+                // let cosine = (orbiter_kin.vel.x * direction.x + orbiter_kin.vel.y * direction.y) / this.norm(orbiter_kin.vel)
+            }
+
+            // orbiter_kin.vel.x = max(orbiter_kin.vel.x, 10)
+            // orbiter_kin.vel.y = max(orbiter_kin.vel.y, 10)
+
+            // Reflection
+            // if (orbiter_geo.pos.y <= 0) {
+            //     orbiter_geo.pos.y = 0
+            //     orbiter_kin.vel.y *= -0.93
+            // } else if (orbiter_geo.pos.y >= windowHeight) {
+            //     orbiter_geo.pos.y = windowHeight
+            //     orbiter_kin.vel.y *= -0.93
+            // }
+        }
+
+        // Set resonation
+        for (let attractor of attractors) {
+            let attractor_att = attractor.getComponent(AttractorComponent);
+            let attractor_geo = attractor.getComponent(GeometryComponent);
+
+            attractor_att.numOrbiters = 0
+            for (let orbiter of orbiters) {
+                let orbiter_geo = orbiter.getMutableComponent(GeometryComponent);
+                if (this.distance(orbiter_geo.pos, attractor_geo.pos) <= attractor_att.resonationRadius) {
+                    attractor_att.numOrbiters += 1
+                }
+            }
+
+            for (let i = 0; i < attractor_att.resonators.length; i++) {
+                let res = attractor_att.resonators[i].getComponent(ResonatorComponent)
+                if (i < attractor_att.numOrbiters) {
+                    if (!res.isExcited) {
+                        let resMutable = attractor_att.resonators[i].getMutableComponent(ResonatorComponent)
+                        resMutable.isExcited = true
+                        resMutable.resonationStrength = 1
+                    }
+                } else if (i >= attractor_att.numOrbiters) {
+                    if (res.isExcited) {
+                        let resMutable = attractor_att.resonators[i].getMutableComponent(ResonatorComponent)
+                        resMutable.isExcited = false
+                    }
+                    if (i == 0) {
+                        let resMutable = attractor_att.resonators[i].getMutableComponent(ResonatorComponent)
+                        resMutable.resonationStrength *= 0.8
+                    }
+                }
+            }
+        }
+    }
+
+    // TODO: move vector operations into the vector class or a util library
+    distance(vec1, vec2) {
+        return Math.sqrt((vec2.x - vec1.x) ** 2 + (vec2.y - vec1.y) ** 2)
+    }
+
+    subtract(vec1, vec2) {
+        return new Vec2(vec1.x - vec2.x, vec1.y - vec2.y)
+    }
+
+    norm(vec) {
+        return Math.sqrt(vec.x ** 2 + vec.y ** 2)
+    }
+
+    normalized(vec) {
+        let n = this.norm(vec)
+        return new Vec2(vec.x / n, vec.y / n)
+    }
+
+    rotatedPI(vec, a, b) {
+        return new Vec2(-a * vec.y, b * vec.x)
+    }
+}
+OrbiterAttractorV2System.queries = {
+    orbiters: { components: [OrbiterComponent, GeometryComponent, KinematicsComponent] },
+    attractors: { components: [AttractorComponent, GeometryComponent] }
+};
+
 
 // Event Handling Systems ======================================================
 
@@ -370,6 +471,7 @@ export class MidiOutSystem extends System {
                 } else { // Resonator is not solid
                     if (resonator.isExcited) {
                         // console.log("sending note on")
+                        // TODO: send sustain CC signal while note is on (regardless of wheher resonator state has changed)
                         this.midiOut.channels[1].sendNoteOn(
                             resonator.note.value, { attack: resonator.resonationStrength });
                     } else {
@@ -382,8 +484,15 @@ export class MidiOutSystem extends System {
         }
     }
 
-    stop() {
+    notesOff() {
         // TODO: Send note off messages, close ports etc.
+        if (this.midiOut) {
+            let resonatorEntities = this.queries.resonators.results;
+            for (let resonatorEntity of resonatorEntities) {
+                let resonator = resonatorEntity.getComponent(ResonatorComponent)
+                this.midiOut.channels[1].sendNoteOff(resonator.note.value);
+            }
+        }
     }
 }
 MidiOutSystem.queries = {
@@ -483,6 +592,20 @@ export class P5RendererSystem extends System {
             textSize(20)
             textFont((window.Fonts.dudler))
             text("loop", mouseX - 19, mouseY + 7)
+        }
+
+        // [EXPT] Connect all exciters with lines
+        strokeWeight(1)
+        exciters = this.queries.exciters.results;
+        for (var i = 0; i < exciters.length; i++) {
+            for (var j = i + 1; j < exciters.length; j++) {
+                let geo1 = exciters[i].getComponent(GeometryComponent);
+                let geo2 = exciters[j].getComponent(GeometryComponent);
+                let lifetime1 = exciters[i].getComponent(LifetimeComponent);
+                let lifetime2 = exciters[j].getComponent(LifetimeComponent);
+                stroke(255, 255 * min(lifetime1.fraction, lifetime2.fraction));
+                line(geo1.pos.x, geo1.pos.y, geo2.pos.x, geo2.pos.y)
+            }
         }
     }
 
