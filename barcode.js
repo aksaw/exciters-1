@@ -7,7 +7,7 @@ import {
 } from './scripts/components.js';
 import {
     KinematicsSystem, LifetimeSystem, P5RendererSystem, ExciterResonatorSystem,
-    ResizeSystem, MidiOutSystem, LoopSystem, GravitatorSystem, SynthSystem
+    ResizeSystem, MidiOutSystem, LoopSystem, GravitatorSystem
 } from './scripts/systems.js';
 import { Vec2 } from './scripts/types.js';
 import { notes } from './scripts/midi.js';
@@ -45,7 +45,6 @@ export function createWorld() {
         .registerSystem(MidiOutSystem)
         .registerSystem(ResizeSystem)
         .registerSystem(LoopSystem)
-        // .registerSystem(SynthSystem)
 
     // Stop systems that do not need to run continuously
     world.getSystem(ResizeSystem).stop()
@@ -65,9 +64,13 @@ export function createWorld() {
     // Create resonator entities
     // TODO: parameterize number of resonators, position etc.
     // TODO: yaml + util to set up notes
-    window.N = notes.length
-    for (var i = 0; i < notes.length; i++) {
+    // window.N = notes.length
+	window.N = 30
+	let padding = 300
+	let tileHeight = 300
+    for (var i = 0; i < window.N; i++) {
         world.createEntity()
+	// 	floorTiles.push(new FloorTile(padding + ((width - 2 * padding) / N * i), (height - tileHeight) / 2, random(0.1, 1.0) * ((width - 2 * padding) / N - 50), tileHeight, notes[i % 4], i % 4 + 1))
             .addComponent(GeometryComponent, {
                 primitive: 'rectangle',
                 width: window.width / window.N,
@@ -75,7 +78,7 @@ export function createWorld() {
                 pos: new Vec2((window.width / N * i), (window.height - 40))
             })
             .addComponent(ResonatorComponent, {
-                isSolid: true,
+                isSolid: false,
                 note: notes[i]
             })
             .addComponent(RenderableComponent);

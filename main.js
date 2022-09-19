@@ -1,7 +1,8 @@
-import { ResizeSystem } from './scripts/systems.js';
+import { ResizeSystem, SynthSystem } from './scripts/systems.js';
 import { MidiContextComponent } from './scripts/components.js';
 import { createWorld as createAttractorsWorld } from './attractors.js'
 import { createWorld as createExcitersWorld } from './exciters.js'
+import { createWorld as createBarcodeWorld } from './barcode.js'
 
 let worlds, world;
 let lastTime, currTime, delta;
@@ -26,9 +27,13 @@ window.setup = function () {
     let attractorsWorld = createAttractorsWorld()
     attractorsWorld.stop()
 
+    let barcodeWorld = createBarcodeWorld()
+    barcodeWorld.stop()
+
     worlds = {
         attractors: attractorsWorld,
         exciters: excitersWorld,
+        barcode: barcodeWorld,
     }
 
     world = worlds.exciters
@@ -77,6 +82,16 @@ window.mouseClicked = function () {
     if (world) {
         world.mouseClicked()
     }
+
+    // let synthSystem = world.getSystem(SynthSystem)
+    // if (!synthSystem.audioContextStarted) {
+    //     userStartAudio();
+    //     synthSystem.audioContextStarted = true
+    //     for (let osc of synthSystem.oscillators) {
+    //         osc.start()
+    //     }
+    //     console.log(synthSystem.oscillators)
+    // }
 }
 
 window.mouseDragged = function () {
@@ -106,10 +121,16 @@ document.getElementById('worlds').onchange = function () {
         world = worlds.attractors
     if (this.value == 'exciters')
         world = worlds.exciters
+    if (this.value == 'barcode')
+        world = worlds.barcode
     world.play()
 };
 
 document.getElementById('midiout-select').onchange = function () {
+    // if (this.value = '') {
+    //     worlds.
+    // }
     worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = this.value
     worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = this.value
 };

@@ -3,7 +3,7 @@ import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
     RenderableComponent, WorldStateContextComponent, OrbiterComponent, AttractorComponent,
-    GravitatorComponent
+    GravitatorComponent, PhysicsContextComponent
 } from './components.js';
 import { Vec2 } from './types.js';
 
@@ -15,16 +15,18 @@ import { Vec2 } from './types.js';
 export class KinematicsSystem extends System {
     execute(delta) {
         let entities = this.queries.entities.results;
+        let physicsContext = this.queries.context.results[0].getComponent(PhysicsContextComponent);
         for (let entity of entities) {
             let geometry = entity.getMutableComponent(GeometryComponent)
             let kinematics = entity.getMutableComponent(KinematicsComponent)
             geometry.pos.add(kinematics.vel)
             kinematics.vel.add(kinematics.acc)
 
-            // TODO: Bounce or wrap around horizontal edges based on a global context component
             // Bounce off at the boundary edges
-            if (geometry.pos.x < 0 || geometry.pos.x > windowWidth) { // TODO: get windowWidth from singleton context entity rather than hardcoding 
-                kinematics.vel.x *= -0.93
+            if (physicsContext.edgeBounce) {
+                if (geometry.pos.x < 0 || geometry.pos.x > windowWidth) { // TODO: get windowWidth from singleton context entity rather than hardcoding 
+                    kinematics.vel.x *= -0.93
+                }
             }
 
         }
@@ -32,6 +34,7 @@ export class KinematicsSystem extends System {
 }
 KinematicsSystem.queries = {
     entities: { components: [GeometryComponent, KinematicsComponent] },
+    context: { components: [PhysicsContextComponent] }
 };
 
 // GravitatorSystem
@@ -237,10 +240,10 @@ export class OrbiterAttractorSystem extends System {
                     direction.x *= -1
                     direction.y *= -1
                 }
-                if (Math.abs(cosine) > 0.5) {
-                    orbiter_kin.vel.x = speed * direction.x
-                    orbiter_kin.vel.y = speed * direction.y
-                }
+                // if (Math.abs(cosine) > 0.5) {
+                orbiter_kin.vel.x = speed * direction.x
+                orbiter_kin.vel.y = speed * direction.y
+                // }
             }
         }
 
@@ -398,7 +401,72 @@ MidiOutSystem.queries = {
 };
 
 
-// Sound
+// Synth Engine Systems ========================================================
+export class SynthSystem extends System {
+    init() {
+        this.reverb = new p5.Reverb()
+        this.oscillators = []
+        this.envelopes = []
+        this.audioContextStarted = false
+    }
+
+    execute(delta) {
+        let resonatorEntities = this.queries.resonators.results; // use changed instead of results
+        for (let i = 0; i < resonatorEntities.length; i++) {
+            let resonator = resonatorEntities[i].getComponent(ResonatorComponent)
+
+            if (!this.oscillators[i]) {
+                this.envelopes[i] = new p5.Envelope()
+
+                this.oscillators[i] = new p5.Oscillator()
+                this.oscillators[i].setType('triangle')
+
+                this.oscillators[i].amp(this.envelopes[i], 0)
+
+                // this.oscillators[i].start()
+                this.reverb.process(this.oscillators[i])
+            }
+
+            this.oscillators[i].freq(midiToFreq(resonator.note.value))
+
+            if (resonator.isSolid) {
+                if (resonator.isExcited) {
+                    // this.midiOut.channels[1].playNote(
+                    //     resonator.note.value,
+                    //     { duration: resonator.durationMillis, attack: resonator.resonationStrength });
+                    // this.oscillators[i].freq(midiToFreq(resonator.note.value + 12))
+                    this.oscillators[i].amp(this.envelopes[i], 0)
+                    this.envelopes[i].setADSR(0.2 * max(0, 0.9 - resonator.resonationStrength), 0.0, 0.1, 0.5)
+                    this.envelopes[i].setRange(resonator.resonationStrength, 0)
+                    this.envelopes[i].play()
+                }
+            } else { // Resonator is not solid
+                if (resonator.isExcited) {
+                    // console.log("sending note on")
+                    // this.midiOut.channels[1].sendNoteOn(
+                    //     resonator.note.value, { attack: resonator.resonationStrength });
+                    this.oscillators[i].amp(1, 1.0)
+                } else {
+                    // console.log("sending note off")
+                    // this.midiOut.channels[1].sendNoteOff(
+                    //     resonator.note.value, { attack: resonator.resonationStrength });
+                    this.oscillators[i].amp(0, 0.5)
+                }
+            }
+        }
+    }
+
+    stop() {
+        // TODO: Send note off messages, close ports etc.
+    }
+}
+SynthSystem.queries = {
+    resonators: {
+        components: [ResonatorComponent],
+        listen: { changed: [ResonatorComponent] }
+    },
+};
+
 
 // Rendering Systems ===========================================================
 

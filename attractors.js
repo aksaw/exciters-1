@@ -3,13 +3,14 @@ import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
     RenderableComponent, WorldStateContextComponent, OrbiterComponent,
-    AttractorComponent, GravitatorComponent
+    AttractorComponent, GravitatorComponent, PhysicsContextComponent
 } from './scripts/components.js';
 import {
     KinematicsSystem, LifetimeSystem, P5RendererSystem, ExciterResonatorSystem,
-    ResizeSystem, MidiOutSystem, LoopSystem, OrbiterAttractorSystem
+    ResizeSystem, MidiOutSystem, LoopSystem, OrbiterAttractorSystem, SynthSystem
 } from './scripts/systems.js';
 import { Vec2, Note } from './scripts/types.js';
+import { random } from './scripts/util.js';
 import { chord_d_minor, chord_e_minor } from './scripts/midi.js';
 
 let world, worldContext;
@@ -32,6 +33,7 @@ export function createWorld() {
         .registerComponent(MidiContextComponent)
         .registerComponent(RenderableComponent)
         .registerComponent(WorldStateContextComponent)
+        .registerComponent(PhysicsContextComponent)
 
     // Register systems
     world
@@ -42,6 +44,8 @@ export function createWorld() {
         .registerSystem(LoopSystem)
         .registerSystem(OrbiterAttractorSystem)
         .registerSystem(MidiOutSystem)
+        .registerSystem(LoopSystem)
+        // .registerSystem(SynthSystem)
 
     // Stop systems that do not need to run continuously
     world.getSystem(ResizeSystem).stop()
@@ -51,6 +55,7 @@ export function createWorld() {
         .addComponent(MidiContextComponent, {
             output: 'loopMIDI Port 1'
         })
+        .addComponent(PhysicsContextComponent)
         .addComponent(WorldStateContextComponent)
     world.worldContext = worldContext
     // TODO: Create some kind of InputSystem or UISystem that populates context based on menu settings?
@@ -162,10 +167,12 @@ function createOrbiterEntity(x, y, size = 10, primitive = 'ellipse') {
             pos: new Vec2(x, y)
         })
         .addComponent(KinematicsComponent, {
-            vel: new Vec2(10 * Math.random() - 5, 10 * Math.random() - 5)
+            // vel: new Vec2(10 * Math.random() - 5, 10 * Math.random() - 5)
+            vel: new Vec2(random(1,5) * (random(0,1) < 0.5 ? 1 : -1),
+                            random(1,5) * (random(0,1) < 0.5 ? 1 : -1))
         })
         .addComponent(LifetimeComponent, {
-            decayRate: 0.01
+            decayRate: 0.2
         })
         .addComponent(RenderableComponent)
         .addComponent(HistoryComponent, {

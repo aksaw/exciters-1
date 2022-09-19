@@ -71,7 +71,7 @@ ResonatorComponent.schema = {
 // Spigot component
 export class SpigotComponent extends Component { }
 SpigotComponent.schema = {
-    // TODO
+    // rate: { type: Types.Number }
 }
 
 // Attraction components
@@ -93,6 +93,8 @@ export class GravitatorComponent extends TagComponent { }
 // Context Components
 export class PhysicsContextComponent extends Component { }
 PhysicsContextComponent.schema = {
+    edgeBounce: { type: Types.Boolean },
+    edgeWrap: { type: Types.Boolean }
 }
 
 export class MidiContextComponent extends Component { }
