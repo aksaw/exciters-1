@@ -3,7 +3,7 @@ import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
     RenderableComponent, WorldStateContextComponent, OrbiterComponent,
-    AttractorComponent, GravitatorComponent, PhysicsContextComponent
+    AttractorComponent, GravitatorComponent, PhysicsContextComponent, TextRenderableComponent
 } from './scripts/components.js';
 import {
     KinematicsSystem, LifetimeSystem, P5RendererSystem, ExciterResonatorSystem,
@@ -34,6 +34,7 @@ export function createWorld() {
         .registerComponent(RenderableComponent)
         .registerComponent(WorldStateContextComponent)
         .registerComponent(PhysicsContextComponent)
+        .registerComponent(TextRenderableComponent)
 
     // Register systems
     world
@@ -78,7 +79,8 @@ export function createWorld() {
                 isSolid: true,
                 note: notes[i]
             })
-            .addComponent(RenderableComponent);
+            .addComponent(RenderableComponent)
+            .addComponent(TextRenderableComponent);
     }
 
     // Event Handlers

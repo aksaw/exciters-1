@@ -69,10 +69,10 @@ ResonatorComponent.schema = {
 }
 
 // Spigot component
-export class SpigotComponent extends Component { }
-SpigotComponent.schema = {
-    // rate: { type: Types.Number }
-}
+// export class SpigotComponent extends Component { }
+// SpigotComponent.schema = {
+//     // rate: { type: Types.Number }
+// }
 
 // Attraction components
 export class AttractorComponent extends Component { }
@@ -114,5 +114,6 @@ WorldStateContextComponent.schema = {
 // View Components
 export class RenderableComponent extends TagComponent {}
 
+export class TextRenderableComponent extends TagComponent {}
 
 // UI Components

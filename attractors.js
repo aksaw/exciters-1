@@ -3,7 +3,7 @@ import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
     RenderableComponent, WorldStateContextComponent, OrbiterComponent,
-    AttractorComponent, GravitatorComponent, PhysicsContextComponent
+    AttractorComponent, GravitatorComponent, PhysicsContextComponent, TextRenderableComponent
 } from './scripts/components.js';
 import {
     KinematicsSystem, LifetimeSystem, P5RendererSystem, ExciterResonatorSystem,
@@ -34,6 +34,7 @@ export function createWorld() {
         .registerComponent(RenderableComponent)
         .registerComponent(WorldStateContextComponent)
         .registerComponent(PhysicsContextComponent)
+        .registerComponent(TextRenderableComponent)
 
     // Register systems
     world
@@ -45,7 +46,7 @@ export function createWorld() {
         .registerSystem(OrbiterAttractorSystem)
         .registerSystem(MidiOutSystem)
         .registerSystem(LoopSystem)
-        // .registerSystem(SynthSystem)
+    // .registerSystem(SynthSystem)
 
     // Stop systems that do not need to run continuously
     world.getSystem(ResizeSystem).stop()
@@ -77,7 +78,9 @@ export function createWorld() {
                 })
         )
     }
-    resonators[0].addComponent(RenderableComponent)
+    resonators[0]
+        .addComponent(RenderableComponent)
+        .addComponent(TextRenderableComponent)
     world.createEntity()
         .addComponent(GeometryComponent, {
             primitive: 'ellipse',
@@ -108,7 +111,9 @@ export function createWorld() {
                 })
         )
     }
-    resonators[0].addComponent(RenderableComponent)
+    resonators[0]
+        .addComponent(RenderableComponent)
+        .addComponent(TextRenderableComponent)
     world.createEntity()
         .addComponent(GeometryComponent, {
             primitive: 'ellipse',
@@ -131,6 +136,8 @@ export function createWorld() {
     }
 
     world.mouseDragged = function () {
+        if (mouseX % 2 == 0 && mouseY % 2 == 0)
+            createOrbiterEntity(mouseX, mouseY, 10, 'ellipse')
     }
 
     world.mousePressed = function () {
@@ -168,8 +175,8 @@ function createOrbiterEntity(x, y, size = 10, primitive = 'ellipse') {
         })
         .addComponent(KinematicsComponent, {
             // vel: new Vec2(10 * Math.random() - 5, 10 * Math.random() - 5)
-            vel: new Vec2(random(1,5) * (random(0,1) < 0.5 ? 1 : -1),
-                            random(1,5) * (random(0,1) < 0.5 ? 1 : -1))
+            vel: new Vec2(random(1, 5) * (random(0, 1) < 0.5 ? 1 : -1),
+                random(1, 5) * (random(0, 1) < 0.5 ? 1 : -1))
         })
         .addComponent(LifetimeComponent, {
             decayRate: 0.2

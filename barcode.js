@@ -3,17 +3,18 @@ import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
     RenderableComponent, WorldStateContextComponent, OrbiterComponent,
-    AttractorComponent, GravitatorComponent, PhysicsContextComponent
+    AttractorComponent, GravitatorComponent, PhysicsContextComponent, TextRenderableComponent
 } from './scripts/components.js';
 import {
     KinematicsSystem, LifetimeSystem, P5RendererSystem, ExciterResonatorSystem,
     ResizeSystem, MidiOutSystem, LoopSystem, GravitatorSystem
 } from './scripts/systems.js';
+import { random } from './scripts/util.js';
 import { Vec2 } from './scripts/types.js';
 import { notes } from './scripts/midi.js';
 
 let world, worldContext;
-let trailEntity;
+let resonators;
 
 export function createWorld() {
     world = new World();
@@ -34,6 +35,7 @@ export function createWorld() {
         .registerComponent(RenderableComponent)
         .registerComponent(WorldStateContextComponent)
         .registerComponent(PhysicsContextComponent)
+        .registerComponent(TextRenderableComponent)
 
     // Register systems
     world
@@ -65,53 +67,41 @@ export function createWorld() {
     // TODO: parameterize number of resonators, position etc.
     // TODO: yaml + util to set up notes
     // window.N = notes.length
-	window.N = 30
-	let padding = 300
-	let tileHeight = 300
+    window.N = 30
+    let padding = 300
+    let tileHeight = 300
+    resonators = []
     for (var i = 0; i < window.N; i++) {
-        world.createEntity()
-	// 	floorTiles.push(new FloorTile(padding + ((width - 2 * padding) / N * i), (height - tileHeight) / 2, random(0.1, 1.0) * ((width - 2 * padding) / N - 50), tileHeight, notes[i % 4], i % 4 + 1))
-            .addComponent(GeometryComponent, {
-                primitive: 'rectangle',
-                width: window.width / window.N,
-                height: 40,
-                pos: new Vec2((window.width / N * i), (window.height - 40))
-            })
-            .addComponent(ResonatorComponent, {
-                isSolid: false,
-                note: notes[i]
-            })
-            .addComponent(RenderableComponent);
+        resonators.push(
+            world.createEntity()
+                .addComponent(GeometryComponent, {
+                    primitive: 'rectangle',
+                    width: random(0.1, 1.0) * ((window.width - 2 * padding) / window.N - 50),
+                    height: tileHeight,
+                    pos: new Vec2(
+                        padding + ((window.width - 2 * padding) / window.N * i),
+                        (height - tileHeight) / 2
+                    )
+                })
+                .addComponent(ResonatorComponent, {
+                    isSolid: false,
+                    note: notes[i % notes.length]
+                })
+                .addComponent(RenderableComponent)
+        );
     }
 
     // Event Handlers
     // TODO: Bruh.
     world.mouseClicked = function () {
-        if (!worldContext.getMutableComponent(WorldStateContextComponent).loopMode)
-            createExciterEntity(mouseX, mouseY, 10, 'ellipse')
-        worldContext.getMutableComponent(WorldStateContextComponent).loopMode = false
+        createExciterEntity(mouseX, mouseY, 10, 'ellipse')
     }
 
     world.mouseDragged = function () {
-        if (!worldContext.getMutableComponent(WorldStateContextComponent).loopMode) {
-            if (!trailEntity || !trailEntity.alive) {
-                trailEntity = createTrailEntity()
-            }
-
-            if (mouseX < windowWidth && mouseY < windowHeight) {
-                trailEntity.getMutableComponent(CurveComponent).vertices.push(new Vec2(mouseX, mouseY))
-                trailEntity.getMutableComponent(LifetimeComponent).percentage = 100
-
-                if (mouseX % 6 == 0) {
-                    createExciterEntity(mouseX, mouseY, 10, 'ellipse')
-                }
-            }
-        }
+        createExciterEntity(mouseX, mouseY, 10, 'ellipse')
     }
 
     world.mousePressed = function () {
-        trailEntity = createTrailEntity()
-
         worldContext.getMutableComponent(WorldStateContextComponent).clickX = mouseX
         worldContext.getMutableComponent(WorldStateContextComponent).clickY = mouseY
         worldContext.getMutableComponent(WorldStateContextComponent).mousePressedDuration = 0
@@ -128,14 +118,6 @@ export function createWorld() {
 
 // Helper methods to create entities with certain archetypes ==================
 
-function createTrailEntity() {
-    return world.createEntity()
-        .addComponent(CurveComponent)
-        .addComponent(LifetimeComponent)
-        .addComponent(KinematicsComponent)
-        .addComponent(RenderableComponent)
-}
-
 function createExciterEntity(x, y, size = 10, primitive = 'ellipse') {
     return world.createEntity()
         .addComponent(GeometryComponent, {
@@ -145,12 +127,11 @@ function createExciterEntity(x, y, size = 10, primitive = 'ellipse') {
             pos: new Vec2(x, y)
         })
         .addComponent(KinematicsComponent, {
+            vel: new Vec2(random(-2, 2), random(-2, 2))
         })
         .addComponent(GravitatorComponent)
-        .addComponent(LifetimeComponent)
-        .addComponent(ExciterComponent)
-        .addComponent(RenderableComponent)
-        .addComponent(HistoryComponent, {
-            length: 120
+        .addComponent(LifetimeComponent, {
+            decayRate: 0.92
         })
+        .addComponent(ExciterComponent)
 }

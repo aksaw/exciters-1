@@ -3,7 +3,7 @@ import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,
     RenderableComponent, WorldStateContextComponent, OrbiterComponent, AttractorComponent,
-    GravitatorComponent, PhysicsContextComponent
+    GravitatorComponent, PhysicsContextComponent, TextRenderableComponent
 } from './components.js';
 import { Vec2 } from './types.js';
 
@@ -28,7 +28,6 @@ export class KinematicsSystem extends System {
                     kinematics.vel.x *= -0.93
                 }
             }
-
         }
     }
 }
@@ -142,9 +141,19 @@ export class ExciterResonatorSystem extends System {
             // TODO: Move collision detection into a physics system
             for (let exciter of exciters) {
                 let exciter_geo = exciter.getMutableComponent(GeometryComponent)
-                let intersecting = collideRectCircle(
-                    resonator_geo.pos.x, resonator_geo.pos.y, resonator_geo.width, resonator_geo.height,
-                    exciter_geo.pos.x, exciter_geo.pos.y, exciter_geo.width)
+                let intersecting = false
+
+                if (resonator_geo.primitive == 'rectangle') {
+                    intersecting = collideRectCircle(
+                        resonator_geo.pos.x, resonator_geo.pos.y, resonator_geo.width, resonator_geo.height,
+                        exciter_geo.pos.x, exciter_geo.pos.y, exciter_geo.width)
+                } else if (resonator_geo.primitive == 'ellipse') {
+                    // Assumes both resonator_geo and exciter_geo are circles, i.e. height = width
+                    let distance = Math.sqrt((resonator_geo.x - exciter_geo.x) ** 2 + (resonator_geo.y - exciter_geo.y) ** 2)
+                    if (distance < resonator_geo.width + exciter_geo.width) {
+                        intersecting = true
+                    }
+                }
 
                 if (intersecting) {
                     let exciter_lifetime = exciter.getComponent(LifetimeComponent)
@@ -308,6 +317,19 @@ OrbiterAttractorSystem.queries = {
     orbiters: { components: [OrbiterComponent, GeometryComponent, KinematicsComponent] },
     attractors: { components: [AttractorComponent, GeometryComponent] }
 };
+
+// // SpigotSystem
+// export class SpigotSystem extends System {
+//     execute(delta) {
+//         let entities = this.queries.entities.results;
+//         for (let entity of entities) {
+//         //     let kinematics = entity.getMutableComponent(KinematicsComponent)
+//         }
+//     }
+// }
+// SpigotSystem.queries = {
+//     entities: { components: [GeometryComponent, SpigotComponent] },
+// };
 
 
 // Event Handling Systems ======================================================
@@ -515,6 +537,12 @@ export class P5RendererSystem extends System {
 
             fill(255 * res.resonationStrength)
             this.renderGeometry(geo.primitive, geo.pos.x, geo.pos.y, geo.width, geo.height)
+        }
+
+        resonators = this.queries.resonatorsText.results;
+        for (var i = 0; i < resonators.length; i++) {
+            let geo = resonators[i].getComponent(GeometryComponent);
+            let res = resonators[i].getComponent(ResonatorComponent);
 
             fill(255 * (1 - res.resonationStrength))
             textSize(16)
@@ -529,8 +557,16 @@ export class P5RendererSystem extends System {
         // Render attractor excitation level
         let attractors = this.queries.attractors.results;
         for (let attractor of attractors) {
-            let res = attractor.getComponent(AttractorComponent).resonators
             let geo = attractor.getComponent(GeometryComponent)
+            let att = attractor.getComponent(AttractorComponent)
+            let res = att.resonators
+            
+            // noFill()
+            // strokeWeight(1)
+            // stroke(255)
+            // ellipse(geo.pos.x, geo.pos.y, 80, 80)
+            // ellipse(geo.pos.x, geo.pos.y, 2 * att.resonationRadius, 2 * att.resonationRadius)
+
             for (let i = 1; i < res.length; i++) {
                 if (res[i].getComponent(ResonatorComponent).isExcited) {
                     let radius = 80 + i * 10
@@ -569,6 +605,7 @@ P5RendererSystem.queries = {
     mouseTrails: { components: [RenderableComponent, CurveComponent, LifetimeComponent] },
     exciters: { components: [RenderableComponent, GeometryComponent, ExciterComponent, LifetimeComponent] },
     resonators: { components: [RenderableComponent, GeometryComponent, ResonatorComponent] },
+    resonatorsText: { components: [RenderableComponent, TextRenderableComponent, GeometryComponent, ResonatorComponent] },
     attractors: { components: [AttractorComponent, GeometryComponent] },
     context: { components: [WorldStateContextComponent] }
 };
