@@ -50,6 +50,7 @@ export function createWorld() {
 
     // Stop systems that do not need to run continuously
     world.getSystem(ResizeSystem).stop()
+    world.getSystem(LoopSystem).stop()
 
     // Create global context singleton entity
     worldContext = world.createEntity()
@@ -127,7 +128,7 @@ function createExciterEntity(x, y, size = 10, primitive = 'ellipse') {
             pos: new Vec2(x, y)
         })
         .addComponent(KinematicsComponent, {
-            vel: new Vec2(random(-2, 2), random(-2, 2))
+            vel: new Vec2(random(-2, 2), 0)
         })
         .addComponent(GravitatorComponent)
         .addComponent(LifetimeComponent, {
