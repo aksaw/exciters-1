@@ -3,6 +3,7 @@ import { MidiContextComponent } from './scripts/components.js';
 import { createWorld as createAttractorsWorld } from './attractors.js'
 import { createWorld as createExcitersWorld } from './exciters.js'
 import { createWorld as createBarcodeWorld } from './barcode.js'
+import { createWorld as createSpiralWorld } from './spiral.js'
 
 let worlds, world;
 let lastTime, currTime, delta;
@@ -21,6 +22,8 @@ window.setup = function () {
         .then(onMidiEnabled)
         .catch(err => alert(err));
 
+    axes();
+
     let excitersWorld = createExcitersWorld()
     excitersWorld.stop()
 
@@ -30,10 +33,14 @@ window.setup = function () {
     let barcodeWorld = createBarcodeWorld()
     barcodeWorld.stop()
 
+    let spiralWorld = createSpiralWorld()
+    spiralWorld.stop()
+
     worlds = {
         attractors: attractorsWorld,
         exciters: excitersWorld,
         barcode: barcodeWorld,
+        spiral: spiralWorld,
     }
 
     world = worlds.exciters
@@ -47,6 +54,43 @@ window.draw = function () {
     delta = currTime - lastTime;
     lastTime = currTime;
     world.execute(delta);
+    axes();
+}
+
+function axes() {
+    translate(windowWidth/2,windowHeight/2);
+    stroke('rgba(255, 255, 255, 1)');
+    let halfWidth = windowWidth/2;
+    let halfHeight = windowHeight/2;
+
+    // x axis 
+    for (var j=0; j<=windowWidth; j=j+10){
+        console.log(j)
+        console.log(j % 100 == 0)
+        if (j == 0 ) {
+            stroke('rgba(255, 255, 255, .15)');
+        } else if (j % 100 == 0) {
+            stroke('rgba(255, 255, 255, .1)');
+        } else {
+            stroke('rgba(255, 255, 255, .05)');
+        }
+      line(-halfWidth, j, windowWidth, j);
+      line(-halfWidth, -j, windowWidth, -j);
+    }
+
+    // x axis
+    for (var i=0; i<=windowHeight ; i=i+10){
+        if (i == 0 ) {
+            stroke('rgba(255, 255, 255, .15)');
+        } else if (i % 100 == 0) {
+            stroke('rgba(255, 255, 255, .1)');
+        } else {
+            stroke('rgba(255, 255, 255, .05)');
+        }
+
+        line(i, -halfHeight, i, windowHeight);
+        line(-i, -halfHeight, -i, windowHeight);
+    }    
 }
 
 // MIDI ========================================================================
@@ -123,6 +167,8 @@ document.getElementById('worlds').onchange = function () {
         world = worlds.exciters
     if (this.value == 'barcode')
         world = worlds.barcode
+    if (this.value == 'spiral')
+        world = worlds.spiral
     world.play()
 };
 
@@ -133,4 +179,5 @@ document.getElementById('midiout-select').onchange = function () {
     worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = this.value
     worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = this.value
     worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+    worlds.spiral.worldContext.getMutableComponent(MidiContextComponent).output = this.value
 };
