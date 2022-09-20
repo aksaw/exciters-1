@@ -67,15 +67,18 @@ export function createWorld() {
     // Create resonator entities
     // TODO: parameterize number of resonators, position etc.
     // TODO: yaml + util to set up notes
+    let x = windowWidth/2;
+    let y = windowHeight/2;
     window.N = notes.length
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 100; i++) {
         console.log(notes.length)
+        circle(x, y, 10); 
         world.createEntity()
             .addComponent(GeometryComponent, {
                 primitive: 'ellipse',
                 width: 50,
                 height: 50,
-                pos: new Vec2((window.width/2), (window.height/2))
+                pos: new Vec2(x, y)
             })
             .addComponent(ResonatorComponent, {
                 isSolid: false,

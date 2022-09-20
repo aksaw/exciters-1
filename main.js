@@ -43,7 +43,7 @@ window.setup = function () {
         spiral: spiralWorld,
     }
 
-    world = worlds.exciters
+    world = worlds.spiral
     world.play()
 
     lastTime = performance.now();
