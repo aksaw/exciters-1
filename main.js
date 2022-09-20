@@ -65,8 +65,6 @@ function axes() {
 
     // x axis 
     for (var j=0; j<=windowWidth; j=j+10){
-        console.log(j)
-        console.log(j % 100 == 0)
         if (j == 0 ) {
             stroke('rgba(255, 255, 255, .15)');
         } else if (j % 100 == 0) {

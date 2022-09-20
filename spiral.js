@@ -69,15 +69,22 @@ export function createWorld() {
     // TODO: yaml + util to set up notes
     let x = windowWidth/2;
     let y = windowHeight/2;
+    let offsetX = windowWidth/2;
+    let offsetY = windowHeight/2;
+    let angle = 1;
+    let scalar = 1;
+    let speed = 1;
+
     window.N = notes.length
-    for (var i = 0; i < 100; i++) {
-        console.log(notes.length)
-        circle(x, y, 10); 
+    for (var i = 0; i < 10000; i++) {
+       x = offsetX + cos(angle) * scalar;
+       y = offsetY + sin(angle) * scalar;
+
         world.createEntity()
             .addComponent(GeometryComponent, {
                 primitive: 'ellipse',
-                width: 50,
-                height: 50,
+                width: 10,
+                height: 10,
                 pos: new Vec2(x, y)
             })
             .addComponent(ResonatorComponent, {
@@ -85,6 +92,14 @@ export function createWorld() {
                 note: notes[i]
             })
             .addComponent(RenderableComponent);
+
+        angle += speed;
+        scalar ++;
+
+        //world.createEntity()
+        //    .addComponent(GeometryComponent, {
+        //        primitive: 'ellipse',
+        //    })
     }
 
     // Event Handlers

@@ -495,7 +495,7 @@ SynthSystem.queries = {
 export class P5RendererSystem extends System {
     execute(delta) {
         noStroke()
-        background('Black')
+        background(25)
 
         // fill(255)
         // textSize(48)
