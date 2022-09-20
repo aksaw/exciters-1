@@ -71,9 +71,9 @@ export function createWorld() {
     let y = windowHeight/2;
     let offsetX = windowWidth/2;
     let offsetY = windowHeight/2;
-    let angle = 1;
+    let angle = 0;
     let scalar = 1;
-    let speed = 1;
+    let speed = .1;
 
     window.N = notes.length
     for (var i = 0; i < 10000; i++) {
