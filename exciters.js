@@ -70,7 +70,7 @@ export function createWorld() {
     for (var i = 0; i < notes.length; i++) {
         world.createEntity()
             .addComponent(GeometryComponent, {
-                primitive: 'rectangle',
+                primitive: 'ellipse',
                 width: window.width / window.N,
                 height: 40,
                 pos: new Vec2((window.width / N * i), (window.height - 40))

@@ -41,10 +41,9 @@ export function createWorld() {
         .registerSystem(P5RendererSystem)
         .registerSystem(LifetimeSystem)
         .registerSystem(KinematicsSystem)
-        .registerSystem(ResizeSystem)
-        .registerSystem(LoopSystem)
         .registerSystem(OrbiterAttractorSystem)
         .registerSystem(MidiOutSystem)
+        .registerSystem(ResizeSystem)
         .registerSystem(LoopSystem)
     // .registerSystem(SynthSystem)
 
@@ -89,7 +88,7 @@ export function createWorld() {
             pos: new Vec2((window.width / 3), (window.height / 3))
         })
         .addComponent(AttractorComponent, {
-            orbitLockRadius: 150,
+            orbitLockRadius: 180,
             resonationRadius: 250,
             resonators: resonators
         })

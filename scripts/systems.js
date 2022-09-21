@@ -149,8 +149,8 @@ export class ExciterResonatorSystem extends System {
                         exciter_geo.pos.x, exciter_geo.pos.y, exciter_geo.width)
                 } else if (resonator_geo.primitive == 'ellipse') {
                     // Assumes both resonator_geo and exciter_geo are circles, i.e. height = width
-                    let distance = Math.sqrt((resonator_geo.x - exciter_geo.x) ** 2 + (resonator_geo.y - exciter_geo.y) ** 2)
-                    if (distance < resonator_geo.width + exciter_geo.width) {
+                    let distance = Math.sqrt((resonator_geo.pos.x - exciter_geo.pos.x) ** 2 + (resonator_geo.pos.y - exciter_geo.pos.y) ** 2)
+                    if (distance < resonator_geo.height + exciter_geo.height) {
                         intersecting = true
                     }
                 }
@@ -208,26 +208,33 @@ export class OrbiterAttractorSystem extends System {
             let orbiter_kin = orbiter.getMutableComponent(KinematicsComponent);
             orbiter_orb.orbitLocked = false
 
+            let speed = this.norm(orbiter_kin.vel)
+            let prevDirection = this.normalized(orbiter_kin.vel)
+            let nextDirection = this.normalized(orbiter_kin.vel)
+
             // single attractor orbit
             for (let attractor of attractors) {
                 let attractor_geo = attractor.getComponent(GeometryComponent);
                 let attractor_att = attractor.getComponent(AttractorComponent);
 
                 if (this.distance(orbiter_geo.pos, attractor_geo.pos) <= attractor_att.orbitLockRadius) {
-                    let speed = this.norm(orbiter_kin.vel)
-                    let direction = this.normalized(this.rotatedPI(this.subtract(attractor_geo.pos, orbiter_geo.pos), 1, 1))
-                    let cosine = (orbiter_kin.vel.x * direction.x + orbiter_kin.vel.y * direction.y) / this.norm(orbiter_kin.vel)
+                    let targetDirection = this.normalized(this.rotatedPI(this.subtract(attractor_geo.pos, orbiter_geo.pos), 1, 1))
+                    let cosine = (orbiter_kin.vel.x * targetDirection.x + orbiter_kin.vel.y * targetDirection.y) / this.norm(orbiter_kin.vel)
+                    let sine = Math.sqrt(1 - cosine ** 2)
                     if (cosine < 0) {
-                        direction.x *= -1
-                        direction.y *= -1
+                        targetDirection.x *= -1
+                        targetDirection.y *= -1
                     }
-                    if (Math.abs(cosine) > 0.5) {
-                        orbiter_orb.orbitLocked = true
-                        orbiter_kin.vel.x = speed * direction.x
-                        orbiter_kin.vel.y = speed * direction.y
+
+                    orbiter_orb.orbitLocked = true
+                    if (Math.abs(cosine) > 0.95) {
+                        nextDirection.x = targetDirection.x
+                        nextDirection.y = targetDirection.y
                     } else {
-                        // nudge orbiter_kin.vel along direction
-                        // v = alpha * u + (1 - alpha) * dir
+                        let alpha = 0.03
+                        nextDirection.x = alpha * targetDirection.x + (1 - alpha) * prevDirection.x
+                        nextDirection.y = alpha * targetDirection.y + (1 - alpha) * prevDirection.y
+                        nextDirection = this.normalized(nextDirection)
                     }
                 }
             }
@@ -242,18 +249,26 @@ export class OrbiterAttractorSystem extends System {
                 let F = this.distance(attractor01_geo.pos, attractor02_geo.pos)
                 let b = windowWidth / 6
                 let a = Math.sqrt(F ** 2 + b ** 2)
-                let speed = this.norm(orbiter_kin.vel)
-                let direction = this.normalized(this.rotatedPI(this.subtract(centerPos, orbiter_geo.pos), a, b))
-                let cosine = (orbiter_kin.vel.x * direction.x + orbiter_kin.vel.y * direction.y) / this.norm(orbiter_kin.vel)
+                let targetDirection = this.normalized(this.rotatedPI(this.subtract(centerPos, orbiter_geo.pos), a, b))
+                let cosine = (orbiter_kin.vel.x * targetDirection.x + orbiter_kin.vel.y * targetDirection.y) / this.norm(orbiter_kin.vel)
                 if (cosine < 0) {
-                    direction.x *= -1
-                    direction.y *= -1
+                    targetDirection.x *= -1
+                    targetDirection.y *= -1
                 }
-                // if (Math.abs(cosine) > 0.5) {
-                orbiter_kin.vel.x = speed * direction.x
-                orbiter_kin.vel.y = speed * direction.y
-                // }
+
+                if (Math.abs(cosine) > 0.9) {
+                    nextDirection.x = targetDirection.x
+                    nextDirection.y = targetDirection.y
+                } else {
+                    let alpha = 0.05
+                    nextDirection.x = alpha * targetDirection.x + (1 - alpha) * prevDirection.x
+                    nextDirection.y = alpha * targetDirection.y + (1 - alpha) * prevDirection.y
+                    nextDirection = this.normalized(nextDirection)
+                }
             }
+
+            orbiter_kin.vel.x = speed * nextDirection.x
+            orbiter_kin.vel.y = speed * nextDirection.y
         }
 
         // Set resonation
@@ -560,7 +575,7 @@ export class P5RendererSystem extends System {
             let geo = attractor.getComponent(GeometryComponent)
             let att = attractor.getComponent(AttractorComponent)
             let res = att.resonators
-            
+
             // noFill()
             // strokeWeight(1)
             // stroke(255)
