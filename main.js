@@ -39,6 +39,10 @@ window.setup = function () {
     world = worlds.exciters
     world.play()
 
+    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = 'Tidal2'
+    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = 'Tidal2'
+    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = 'Tidal2'
+
     lastTime = performance.now();
 }
 
@@ -47,6 +51,44 @@ window.draw = function () {
     delta = currTime - lastTime;
     lastTime = currTime;
     world.execute(delta);
+}
+
+window.keyPressed = function () {
+
+    if (key == 1) {
+        console.log('One');
+        const currentlyActive = document.getElementsByClassName('active')[0];
+        const exciters = document.getElementsByClassName('Exciters')[0];
+
+        currentlyActive.classList.remove('active');
+        exciters.classList.add('active');
+
+        world.stop();
+        world = worlds.exciters;
+        world.play();
+    } else if (key == 2) {
+        console.log('Two');
+        const currentlyActive = document.getElementsByClassName('active')[0];
+        const attractors = document.getElementsByClassName('Attractors')[0];
+
+        currentlyActive.classList.remove('active');
+        attractors.classList.add('active');
+
+        world.stop();
+        world = worlds.attractors;
+        world.play();
+    } else if (key == 3) {
+        console.log('Three');
+        const currentlyActive = document.getElementsByClassName('active')[0];
+        const barcode = document.getElementsByClassName('Barcode')[0];
+
+        currentlyActive.classList.remove('active');
+        barcode.classList.add('active');
+
+        world.stop();
+        world = worlds.barcode;
+        world.play();
+    }
 }
 
 // MIDI ========================================================================
@@ -126,11 +168,13 @@ document.getElementById('worlds').onchange = function () {
     world.play()
 };
 
-document.getElementById('midiout-select').onchange = function () {
-    // if (this.value = '') {
-    //     worlds.
-    // }
-    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = this.value
-    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = this.value
-    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = this.value
-};
+// document.getElementById('midiout-select').onchange = function () {
+//     // if (this.value = '') {
+//     //     worlds.
+//     // }
+//     worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+//     worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+//     worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+    
+// };
+
