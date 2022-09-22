@@ -54,7 +54,7 @@ window.draw = function () {
     delta = currTime - lastTime;
     lastTime = currTime;
     world.execute(delta);
-    axes();
+    //axes();
 }
 
 function axes() {

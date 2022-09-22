@@ -149,7 +149,7 @@ export class ExciterResonatorSystem extends System {
                         exciter_geo.pos.x, exciter_geo.pos.y, exciter_geo.width)
                 } else if (resonator_geo.primitive == 'ellipse') {
                     // Assumes both resonator_geo and exciter_geo are circles, i.e. height = width
-                    let distance = Math.sqrt((resonator_geo.x - exciter_geo.x) ** 2 + (resonator_geo.y - exciter_geo.y) ** 2)
+                    let distance = Math.sqrt((resonator_geo.pos.x - exciter_geo.pos.x) ** 2 + (resonator_geo.pos.y - exciter_geo.pos.y) ** 2)
                     if (distance < resonator_geo.width + exciter_geo.width) {
                         intersecting = true
                     }
@@ -503,20 +503,20 @@ export class P5RendererSystem extends System {
         // text('DAWN', width - 200, 55)
 
         // Render mouse trails
-        strokeWeight(2)
-        strokeJoin(ROUND)
-        noFill()
-        let mouseTrails = this.queries.mouseTrails.results;
-        for (var i = 0; i < mouseTrails.length; i++) {
-            let curve = mouseTrails[i].getComponent(CurveComponent);
-            let lifetime = mouseTrails[i].getComponent(LifetimeComponent);
-            stroke(255, 255 * lifetime.fraction)
-            beginShape()
-            for (vertex of curve.vertices) {
-                curveVertex(vertex.x, vertex.y)
-            }
-            endShape()
-        }
+        // strokeWeight(2)
+        // strokeJoin(ROUND)
+        // noFill()
+        // let mouseTrails = this.queries.mouseTrails.results;
+        // for (var i = 0; i < mouseTrails.length; i++) {
+        //     let curve = mouseTrails[i].getComponent(CurveComponent);
+        //     let lifetime = mouseTrails[i].getComponent(LifetimeComponent);
+        //     stroke(255, 255 * lifetime.fraction)
+        //     beginShape()
+        //     for (vertex of curve.vertices) {
+        //         curveVertex(vertex.x, vertex.y)
+        //     }
+        //     endShape()
+        // }
 
         // Render exciters
         strokeWeight(1)

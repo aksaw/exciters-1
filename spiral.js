@@ -72,29 +72,33 @@ export function createWorld() {
     let offsetX = windowWidth/2;
     let offsetY = windowHeight/2;
     let angle = 0;
-    let scalar = 1;
-    let speed = .1;
+    let scalar = .5;
+    let speed = .5;
+    let mod  = 10;
+    
 
     window.N = notes.length
-    for (var i = 0; i < 10000; i++) {
-       x = offsetX + cos(angle) * scalar;
-       y = offsetY + sin(angle) * scalar;
+    for (var i = 0; i < 150; i++) {
+       x = offsetX + cos(angle) * scalar * mod;
+       y = offsetY + sin(angle) * scalar * mod;
 
         world.createEntity()
             .addComponent(GeometryComponent, {
                 primitive: 'ellipse',
-                width: 10,
-                height: 10,
+                width: scalar,
+                height: scalar,
                 pos: new Vec2(x, y)
             })
             .addComponent(ResonatorComponent, {
                 isSolid: false,
-                note: notes[i]
+                note: notes[i % notes.length]
             })
             .addComponent(RenderableComponent);
 
         angle += speed;
-        scalar ++;
+        scalar += .1;
+
+        console.log(notes[i % notes.length])
 
         //world.createEntity()
         //    .addComponent(GeometryComponent, {
@@ -112,9 +116,9 @@ export function createWorld() {
 
     world.mouseDragged = function () {
         if (!worldContext.getMutableComponent(WorldStateContextComponent).loopMode) {
-            if (!trailEntity || !trailEntity.alive) {
-                trailEntity = createTrailEntity()
-            }
+            //if (!trailEntity || !trailEntity.alive) {
+            //    trailEntity = createTrailEntity()
+            //}
 
             if (mouseX < windowWidth && mouseY < windowHeight) {
                 trailEntity.getMutableComponent(CurveComponent).vertices.push(new Vec2(mouseX, mouseY))
