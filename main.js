@@ -10,7 +10,7 @@ let lastTime, currTime, delta;
 window.Fonts = {}
 window.preload = function () {
     window.Fonts.dudler = loadFont('assets/Dudler-Regular.woff');
-    window.Fonts.emeritus = loadFont('assets/Emeritus-Display.woff');
+    // window.Fonts.emeritus = loadFont('assets/Emeritus-Display.woff');
 }
 
 window.setup = function () {
