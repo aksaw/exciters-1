@@ -138,21 +138,27 @@ barcodeButton.addEventListener('click',(event) => {
 // Turn canvas off when you hover over button
 
 const worldSelector = document.getElementsByClassName('world-selector')[0];
+const midiSelector = document.getElementById('midiout-select');
 
-worldSelector.addEventListener("mouseover", mouseOverWorldSelector, false);
-worldSelector.addEventListener("mouseout", mouseOutWorldSelector, false);
+worldSelector.addEventListener("mouseover", mouseOverSelector, false);
+worldSelector.addEventListener("mouseout", mouseOutSelector, false);
 
-function mouseOverWorldSelector() {  
+midiSelector.addEventListener("mouseover", mouseOverSelector, false);
+midiSelector.addEventListener("mouseout", mouseOutSelector, false);
+
+
+function mouseOverSelector() {  
     worlds.attractors.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = false
     worlds.exciters.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = false
     worlds.barcode.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = false
 }
 
-function mouseOutWorldSelector() {
+function mouseOutSelector() {
     worlds.attractors.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = true
     worlds.exciters.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = true
     worlds.barcode.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = true
 }
+
 
 // MIDI ========================================================================
 
