@@ -4,6 +4,11 @@
     src: url('assets/Dudler-Regular.woff') format("woff");
 }
 
+@font-face {
+    font-family: 'Khalos';
+    src: url('assets/Khalos-Display.woff') format("woff");
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -41,13 +46,13 @@ h1 {
 }
   
 h2 {
-    font-weight: 'Space Grotesk';
+    font-weight: 'Khalos';
     color: white;
     font-weight: 400;
 }
   
 h3 {
-    font-family: 'Space Grotesk';
+    font-family: 'Khalos';
     font-size: 18px;
     color: white;
 }
@@ -125,7 +130,7 @@ nav {
 }
 
 #midiout-select {
-    font-family: 'Space Grotesk';
+    font-family: 'Khalos';
     background: transparent;
     color: white;
     padding: 18px;
