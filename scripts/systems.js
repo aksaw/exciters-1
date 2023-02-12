@@ -1,4 +1,5 @@
-import { System, Not } from '../node_modules/ecsy/build/ecsy.module.min.js';
+// import { System, Not } from '../node_modules/ecsy/build/ecsy.module.min.js';
+import { System, Not } from 'https://ecsyjs.github.io/ecsy/build/ecsy.module.js';
 import {
     GeometryComponent, CurveComponent, LifetimeComponent, ExciterComponent,
     ResonatorComponent, KinematicsComponent, MidiContextComponent, HistoryComponent,

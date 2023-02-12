@@ -1,4 +1,5 @@
-import { createType, copyCopyable, cloneClonable } from '../node_modules/ecsy/build/ecsy.module.min.js';
+// import { createType, copyCopyable, cloneClonable } from '../node_modules/ecsy/build/ecsy.module.min.js';
+import { createType, copyCopyable, cloneClonable } from 'https://ecsyjs.github.io/ecsy/build/ecsy.module.js';
 
 // 2D Vector Type
 export class Vec2 {

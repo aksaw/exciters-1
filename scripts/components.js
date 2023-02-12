@@ -1,4 +1,5 @@
-import { Component, TagComponent, Types } from '../node_modules/ecsy/build/ecsy.module.min.js';
+// import { Component, TagComponent, Types } from '../node_modules/ecsy/build/ecsy.module.min.js';
+import { Component, TagComponent, Types } from 'https://ecsyjs.github.io/ecsy/build/ecsy.module.js';
 import { Vec2Type, NoteType } from './types.js'
 
 // Geometry Components
