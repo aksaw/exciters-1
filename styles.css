@@ -141,3 +141,6 @@ nav {
     right: 24px;
 }
 
+#midiout-select option {
+    color: black;
+}
