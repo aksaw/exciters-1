@@ -178,7 +178,7 @@ function createOrbiterEntity(x, y, size = 10, primitive = 'ellipse') {
                 random(1, 5) * (random(0, 1) < 0.5 ? 1 : -1))
         })
         .addComponent(LifetimeComponent, {
-            decayRate: 0.2
+            decayRate: 0.18
         })
         .addComponent(RenderableComponent)
         .addComponent(HistoryComponent, {
