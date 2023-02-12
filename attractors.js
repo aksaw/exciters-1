@@ -129,13 +129,15 @@ export function createWorld() {
     // Events Handlers
     // TODO: Disgusting. Please do this in a better way.
     world.mouseClicked = function () {
-        if (!worldContext.getComponent(WorldStateContextComponent).loopMode)
+        let worldStateContext = worldContext.getComponent(WorldStateContextComponent)
+        if (!worldStateContext.loopMode && worldStateContext.canvasActive)
             createOrbiterEntity(mouseX, mouseY, 10, 'ellipse')
         worldContext.getMutableComponent(WorldStateContextComponent).loopMode = false
     }
 
     world.mouseDragged = function () {
-        if (mouseX % 2 == 0 && mouseY % 2 == 0)
+        let worldStateContext = worldContext.getComponent(WorldStateContextComponent)
+        if (mouseX % 2 == 0 && mouseY % 2 == 0 && worldStateContext.canvasActive)
             createOrbiterEntity(mouseX, mouseY, 10, 'ellipse')
     }
 

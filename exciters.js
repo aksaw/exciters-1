@@ -86,13 +86,15 @@ export function createWorld() {
     // Event Handlers
     // TODO: Bruh.
     world.mouseClicked = function () {
-        if (!worldContext.getMutableComponent(WorldStateContextComponent).loopMode)
+        let worldStateContext = worldContext.getComponent(WorldStateContextComponent)
+        if (!worldStateContext.loopMode && worldStateContext.canvasActive)
             createExciterEntity(mouseX, mouseY, 10, 'ellipse')
         worldContext.getMutableComponent(WorldStateContextComponent).loopMode = false
     }
 
     world.mouseDragged = function () {
-        if (!worldContext.getMutableComponent(WorldStateContextComponent).loopMode) {
+        let worldStateContext = worldContext.getComponent(WorldStateContextComponent)
+        if (!worldStateContext.loopMode && worldStateContext.canvasActive) {
             if (!trailEntity || !trailEntity.alive) {
                 trailEntity = createTrailEntity()
             }
@@ -109,7 +111,10 @@ export function createWorld() {
     }
 
     world.mousePressed = function () {
-        trailEntity = createTrailEntity()
+        let worldStateContext = worldContext.getComponent(WorldStateContextComponent)
+        if (worldStateContext.canvasActive) {
+            trailEntity = createTrailEntity()
+        }
 
         worldContext.getMutableComponent(WorldStateContextComponent).clickX = mouseX
         worldContext.getMutableComponent(WorldStateContextComponent).clickY = mouseY

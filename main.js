@@ -1,5 +1,5 @@
 import { ResizeSystem, SynthSystem } from './scripts/systems.js';
-import { MidiContextComponent } from './scripts/components.js';
+import { MidiContextComponent, WorldStateContextComponent } from './scripts/components.js';
 import { createWorld as createAttractorsWorld } from './attractors.js'
 import { createWorld as createExcitersWorld } from './exciters.js'
 import { createWorld as createBarcodeWorld } from './barcode.js'
@@ -143,11 +143,15 @@ worldSelector.addEventListener("mouseover", mouseOverWorldSelector, false);
 worldSelector.addEventListener("mouseout", mouseOutWorldSelector, false);
 
 function mouseOverWorldSelector() {  
-    console.log('Mouse is now over world selector')
+    worlds.attractors.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = false
+    worlds.exciters.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = false
+    worlds.barcode.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = false
 }
 
 function mouseOutWorldSelector() {
-    console.log('Mouse is off world selector')
+    worlds.attractors.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = true
+    worlds.exciters.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = true
+    worlds.barcode.worldContext.getMutableComponent(WorldStateContextComponent).canvasActive = true
 }
 
 // MIDI ========================================================================

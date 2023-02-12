@@ -95,11 +95,15 @@ export function createWorld() {
     // Event Handlers
     // TODO: Bruh.
     world.mouseClicked = function () {
-        createExciterEntity(mouseX, mouseY, 10, 'ellipse')
+        if (worldContext.getComponent(WorldStateContextComponent).canvasActive) {
+            createExciterEntity(mouseX, mouseY, 10, 'ellipse')
+        }
     }
 
     world.mouseDragged = function () {
-        createExciterEntity(mouseX, mouseY, 10, 'ellipse')
+        if (worldContext.getComponent(WorldStateContextComponent).canvasActive) {
+            createExciterEntity(mouseX, mouseY, 10, 'ellipse')
+        }
     }
 
     world.mousePressed = function () {

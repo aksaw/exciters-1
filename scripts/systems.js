@@ -55,7 +55,7 @@ GravitatorSystem.queries = {
 export class LoopSystem extends System {
     execute(delta) {
         let worldStateContext = this.queries.context.results[0].getComponent(WorldStateContextComponent);
-        if (mouseIsPressed) { // TODO: Move this section into a separate system
+        if (mouseIsPressed && worldStateContext.canvasActive) { // TODO: Move this section into a separate system
             // TOOD: move mouseX and mouseY into a context component
             if ((mouseX == worldStateContext.clickX) && (mouseY == worldStateContext.clickY)) {
                 worldStateContext.mousePressedDuration += 1
