@@ -35,7 +35,7 @@ canvas {
 
 body {
     background: black;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
   
 h1 {
@@ -47,8 +47,9 @@ h1 {
   
 h2 {
     font-weight: 'Khalos';
-    color: white;
+    /* color: white; */
     font-weight: 400;
+    margin: 0px;
 }
   
 h3 {
@@ -132,15 +133,52 @@ nav {
 #midiout-select {
     font-family: 'Khalos';
     background: transparent;
-    color: white;
+    color: #898989;
     padding: 18px;
-    border-radius: 4px; 
+    border-radius: 0px 4px 4px 0px; 
     position:absolute;
     float: right;
     top: 24px;
     right: 24px;
+    border: 1px solid #898989;
+    height:56px;
 }
 
 #midiout-select option {
     color: black;
 }
+
+#tooltip {
+    border: 1px solid #898989;
+    position: absolute;
+    top: 24px;
+    right: 198px;
+    height: 54px;
+    padding-right: 24px;
+    padding-left: 24px;
+    border-radius: 4px 0px 0px 4px;
+    font-size: 12px;
+    color: #898989;
+    background-color: black;
+}
+
+#tooltip:hover {
+    color: black;
+    background-color: white;
+}
+
+#tooltip h2 {
+    padding-top: 16px;
+}
+
+a {
+    text-decoration: none;
+    /* font-size: 18px; */
+
+}
+
+a:hover {
+    text-decoration: underline;
+    color: black
+}
+

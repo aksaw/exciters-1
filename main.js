@@ -139,12 +139,16 @@ barcodeButton.addEventListener('click',(event) => {
 
 const worldSelector = document.getElementsByClassName('world-selector')[0];
 const midiSelector = document.getElementById('midiout-select');
+const tooltip = document.getElementById('tooltip');
 
 worldSelector.addEventListener("mouseover", mouseOverSelector, false);
 worldSelector.addEventListener("mouseout", mouseOutSelector, false);
 
 midiSelector.addEventListener("mouseover", mouseOverSelector, false);
 midiSelector.addEventListener("mouseout", mouseOutSelector, false);
+
+tooltip.addEventListener("mouseover", mouseOverSelector, false);
+tooltip.addEventListener("mouseout", mouseOutSelector, false);
 
 
 function mouseOverSelector() {  
