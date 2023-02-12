@@ -39,9 +39,12 @@ window.setup = function () {
     world = worlds.exciters
     world.play()
 
-    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = 'loopMIDI Port 1' //'Tidal2'
-    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = 'loopMIDI Port 1' //'Tidal2'
-    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = 'loopMIDI Port 1' //'Tidal2'
+    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = 'Bus 1'
+    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).outputChannel = 2
+    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = 'Bus 1'
+    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).outputChannel = 4
+    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = 'Bus 1'
+    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).outputChannel = 3
 
     lastTime = performance.now();
 }
@@ -89,6 +92,62 @@ window.keyPressed = function () {
         world = worlds.barcode;
         world.play();
     }
+}
+
+// Go on sketch when user clicks on associated button
+
+const excitersButton = document.getElementsByClassName('Exciters')[0];
+
+excitersButton.addEventListener('click',(event) => {
+    const currentlyActive = document.getElementsByClassName('active')[0];
+
+    currentlyActive.classList.remove('active');
+    excitersButton.classList.add('active');
+
+    world.stop();
+    world = worlds.exciters;
+    world.play();
+});
+
+const attractorsButton = document.getElementsByClassName('Attractors')[0];
+
+attractorsButton.addEventListener('click',(event) => {
+    const currentlyActive = document.getElementsByClassName('active')[0];
+
+    currentlyActive.classList.remove('active');
+    attractorsButton.classList.add('active');
+
+    world.stop();
+    world = worlds.attractors;
+    world.play();
+});
+
+const barcodeButton = document.getElementsByClassName('Barcode')[0];
+
+barcodeButton.addEventListener('click',(event) => {
+    const currentlyActive = document.getElementsByClassName('active')[0];
+
+    currentlyActive.classList.remove('active');
+    barcodeButton.classList.add('active');
+
+    world.stop();
+    world = worlds.barcode;
+    world.play();
+});
+
+// Turn canvas off when you hover over button
+
+const worldSelector = document.getElementsByClassName('world-selector')[0];
+
+worldSelector.addEventListener("mouseover", mouseOverWorldSelector, false);
+worldSelector.addEventListener("mouseout", mouseOutWorldSelector, false);
+
+function mouseOverWorldSelector() {  
+    console.log('Mouse is now over world selector')
+}
+
+function mouseOutWorldSelector() {
+    console.log('Mouse is off world selector')
 }
 
 // MIDI ========================================================================
