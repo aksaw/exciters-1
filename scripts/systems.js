@@ -55,7 +55,7 @@ GravitatorSystem.queries = {
 // LoopSystem
 export class LoopSystem extends System {
     execute(delta) {
-        let worldStateContext = this.queries.context.results[0].getComponent(WorldStateContextComponent);
+        let worldStateContext = this.queries.context.results[0].getMutableComponent(WorldStateContextComponent);
         if (mouseIsPressed && worldStateContext.canvasActive) { // TODO: Move this section into a separate system
             // TOOD: move mouseX and mouseY into a context component
             if ((mouseX == worldStateContext.clickX) && (mouseY == worldStateContext.clickY)) {
@@ -282,8 +282,8 @@ export class OrbiterAttractorSystem extends System {
 
         // Set resonation
         for (let attractor of attractors) {
-            let attractor_att = attractor.getComponent(AttractorComponent);
-            let attractor_geo = attractor.getComponent(GeometryComponent);
+            let attractor_att = attractor.getMutableComponent(AttractorComponent);
+            let attractor_geo = attractor.getMutableComponent(GeometryComponent);
 
             attractor_att.numOrbiters = 0
             for (let orbiter of orbiters) {
