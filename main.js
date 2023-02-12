@@ -39,10 +39,10 @@ window.setup = function () {
     world = worlds.exciters
     world.play()
 
+    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = 'Bus 1'
+    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).outputChannel = 1
     worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = 'Bus 1'
     worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).outputChannel = 2
-    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = 'Bus 1'
-    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).outputChannel = 4
     worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = 'Bus 1'
     worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).outputChannel = 3
 
