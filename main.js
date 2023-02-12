@@ -39,9 +39,9 @@ window.setup = function () {
     world = worlds.exciters
     world.play()
 
-    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = 'Tidal2'
-    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = 'Tidal2'
-    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = 'Tidal2'
+    worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = 'loopMIDI Port 1' //'Tidal2'
+    worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = 'loopMIDI Port 1' //'Tidal2'
+    worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = 'loopMIDI Port 1' //'Tidal2'
 
     lastTime = performance.now();
 }

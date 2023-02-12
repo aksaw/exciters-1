@@ -106,6 +106,7 @@ MidiContextComponent.schema = {
 export class WorldStateContextComponent extends Component { }
 WorldStateContextComponent.schema = {
     loopMode: {type: Types.Boolean, default: false},
+    // loopLocked: {type: Types.Boolean, default: false},
     // canvasActive: set to false when interacting with UI elements etc.
     clickX: {type: Types.Number},
     clickY: {type: Types.Number},

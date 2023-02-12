@@ -66,6 +66,14 @@ export class LoopSystem extends System {
             if (worldStateContext.mousePressedDuration > 20) {
                 worldStateContext.loopMode = true
             }
+
+            // Loop locking
+            // if (worldStateContext.loopMode && !worldStateContext.loopLocked) {
+            //     let distance = Math.sqrt((mouseX - windowWidth/2) ** 2 + (mouseY - windowHeight/2) ** 2)
+            //     if (distance < 30) {
+            //         worldStateContext.loopLocked = true
+            //     }
+            // }
         }
 
         let entities = this.queries.entities.results;
