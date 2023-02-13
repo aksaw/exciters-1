@@ -588,6 +588,8 @@ export class P5RendererSystem extends System {
             // noFill()
             // strokeWeight(1)
             // stroke(255)
+            // noStroke()
+            // fill(30, 30, 30)
             // ellipse(geo.pos.x, geo.pos.y, 80, 80)
             // ellipse(geo.pos.x, geo.pos.y, 2 * att.resonationRadius, 2 * att.resonationRadius)
 
