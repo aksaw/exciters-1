@@ -5,8 +5,13 @@
 }
 
 @font-face {
-    font-family: 'Khalos';
-    src: url('assets/Khalos-Display.woff') format("woff");
+    font-family: 'Surt Expanded Black';
+    src: url('assets/Surt-Expanded-Black.woff') format("woff");
+}
+
+@font-face {
+    font-family: 'Surt Expanded Regular';
+    src: url('assets/Surt-Expanded-Regular.woff') format("woff");
 }
 
 body {
@@ -46,14 +51,14 @@ h1 {
 }
   
 h2 {
-    font-weight: 'Khalos';
+    font-weight: 'Surt Expanded Regular';
     /* color: white; */
     font-weight: 400;
     margin: 0px;
 }
   
 h3 {
-    font-family: 'Khalos';
+    font-family: 'Surt Expanded Regular';
     font-size: 18px;
     color: white;
 }
@@ -120,7 +125,7 @@ nav {
     margin-top: 22px;
     border: 1px solid white;
     border-radius: 4px;
-    padding-top: 14px;
+    padding-top: 13px;
     padding-right: 12px;
     padding-left: 12px;
     padding-bottom: 9px;
@@ -131,35 +136,45 @@ nav {
 }
 
 #midiout-select {
-    font-family: 'Khalos';
+    font-family: 'Surt Expanded Regular';
     background: transparent;
     color: #898989;
     padding: 18px;
-    border-radius: 0px 4px 4px 0px; 
+    border-radius: 4px; 
     position:absolute;
     float: right;
     top: 24px;
     right: 24px;
     border: 1px solid #898989;
     height:56px;
+    width: 200px;
+    /* font-size: 10px; */
 }
 
 #midiout-select option {
     color: black;
 }
 
+#midiout-select:hover {
+    color: black;
+    background-color: white;
+}
+
 #tooltip {
-    border: 1px solid #898989;
+    /* border: 1px solid #898989; */
     position: absolute;
     top: 24px;
-    right: 198px;
+    right: 230px;
     height: 54px;
     padding-right: 24px;
     padding-left: 24px;
-    border-radius: 4px 0px 0px 4px;
-    font-size: 12px;
+    padding-top: 2px;
+    border-radius: 4px;
+    font-size: 9px;
     color: #898989;
     background-color: black;
+    text-decoration: underline;
+    font-family: 'Surt Expanded Regular';
 }
 
 #tooltip:hover {
@@ -172,7 +187,7 @@ nav {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: underline;
     /* font-size: 18px; */
 
 }
