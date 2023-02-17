@@ -20,7 +20,7 @@ window.setup = function () {
     WebMidi
         .enable()
         .then(onMidiEnabled)
-        .catch(err => alert(err));
+        // .catch(err => alert(err));
 
     let excitersWorld = createExcitersWorld()
     excitersWorld.stop()
