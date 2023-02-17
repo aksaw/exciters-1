@@ -1,0 +1,45 @@
+@font-face {
+    font-family: 'Surt Expanded Regular';
+    src: url('Surt-Expanded-Regular.woff') format("woff");
+}
+
+body {
+    background-color: black;
+}
+
+#content {
+    margin: auto;
+    padding-bottom: 48px;
+}
+
+#title {
+    width: 80%;
+    margin: auto;
+    margin-top: 64px;
+}
+
+#title img {
+    width: 100%;
+}
+
+.text-block {
+    width: 80%;
+    margin: auto;
+}
+
+.video {
+    width: 90%;
+    margin: 36px auto;
+    border: 1px solid white;
+}
+
+.video video {
+    width: 100%;
+}
+
+p {
+    font-family: 'Surt Expanded Regular';
+    color: white;
+    font-size: 16px;
+    line-height: 1.5rem;
+}

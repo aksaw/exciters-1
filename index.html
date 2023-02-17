@@ -4,53 +4,114 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>DAWN</title>
+	<title>D1 — New Paradigm of Musical Interactivity</title>
 	<link rel="stylesheet" href="styles.css">
+
+	<style media="all">
+	</style>
 </head>
-
 <body>
-	<div id="world-selector-container">
-
-	</div>
-
-	<div>
-		<select name="worlds" id="worlds" style="position:absolute; top:40px; left:40px; display: none">
-			<option value="exciters">EXCITERS</option>
-			<option value="attractors">ATTRACTORS</option>
-			<option value="barcode">BARCODE</option>
-		</select>
-	</div>
-
-	<a href="https://help.ableton.com/hc/en-us/articles/209774225-Setting-up-a-virtual-MIDI-bus" target="_blank">
-		<div id="tooltip">
-			<h2>Connect to your DAW:</h2>
+	<div class="desktop-display" id="canvas-div">
+		<div id="world-selector-container">
 		</div>
-	</a>
 
-	<div>
-		<select name="midiout-select" id="midiout-select">
-			<option value="">Select MIDI Output Port</option>
-		</select>
+		<div>
+			<select name="worlds" id="worlds" style="position:absolute; top:40px; left:40px; display: none">
+				<option value="exciters">EXCITERS</option>
+				<option value="attractors">ATTRACTORS</option>
+				<option value="barcode">BARCODE</option>
+			</select>
+		</div>
+
+		<a href="https://help.ableton.com/hc/en-us/articles/209774225-Setting-up-a-virtual-MIDI-bus" target="_blank">
+			<div id="tooltip">
+				<h2>Connect to your DAW:</h2>
+			</div>
+		</a>
+
+		<div>
+			<select name="midiout-select" id="midiout-select">
+				<option value="">Select MIDI Output Port</option>
+			</select>
+		</div>
+
+		<!-- P5 -->
+		<!-- <script src="node_modules/p5/lib/p5.min.js"></script>
+			<script src="node_modules/p5/lib/addons/p5.sound.min.js"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
+		<script defer src="https://unpkg.com/p5.collide2d"></script>
+		<script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
+
+		<!-- React -->
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+		<!-- <script type="module" src="node_modules/ecsy/build/ecsy.module.js"></script> -->
+		<!-- <script type="module" src="main-exciters-p5.js"></script> -->
+		<!-- <script type="module" src="main-attractors-p5.js"></script> -->
+
+		<!-- DAWN Javascript -->
+		<script src="nav.js"></script>
+		<script type="module" src="main.js"></script>
 	</div>
 
-	<!-- P5 -->
-	<!-- <script src="node_modules/p5/lib/p5.min.js"></script>
-			<script src="node_modules/p5/lib/addons/p5.sound.min.js"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
-	<script defer src="https://unpkg.com/p5.collide2d"></script>
-	<script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
+	<div class="mobile-display">
+        <div id="content">
+            <div id="title">
+                <img src="assets/D1.svg" alt="">
+            </div>
 
-	<!-- React -->
-	<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-	<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+            <div class="text-block">
+                <p>D1 is an exploration of a new grammar of composition informed by the laws that govern bodies in space.</p>
+            </div>
 
-	<!-- <script type="module" src="node_modules/ecsy/build/ecsy.module.js"></script> -->
-	<!-- <script type="module" src="main-exciters-p5.js"></script> -->
-	<!-- <script type="module" src="main-attractors-p5.js"></script> -->
+            <div class="text-block" style="margin-bottom: 72px">
+                <p>We’re weaving the motions of nature and machines into the digital soundstream, that circulating through silicon veins.</p>
+            </div>
 
-	<!-- DAWN Javascript -->
-	<script src="nav.js"></script>
-	<script type="module" src="main.js"></script>
+            <div class="video">
+                <video controls autoplay loop muted>
+                    <source src="assets/exciters-demo.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                  </video>
+            </div>
+
+            <div class="text-block" style="margin-bottom: 72px">
+                <p>Exciters enables you to trigger notes with gravity. You can also loop phrases and yield unusual rhythms.</p>
+            </div>
+
+            <div class="video">
+                <video controls autoplay loop muted>
+                    <source src="assets/attractors-demo.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                  </video>
+            </div>
+
+            <div class="text-block" style="margin-bottom: 72px">
+                <p>Attractors enables you to create chords using planetary motion.</p>
+            </div>
+
+            <div class="video">
+                <video controls autoplay loop muted>
+                    <source src="assets/barcode-demo.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                  </video>
+            </div>
+
+            <div class="text-block" style="padding-bottom: 48px; margin-bottom: 64px; border-bottom: 1px solid white">
+                <p>Barcode lets you generate staccato rhythms with mouse strokes.</p>
+            </div>
+
+            <div class="text-block">
+                <p>D1 works by sending MIDI directly into your DAW. You can pipe the MIDI into any synth or sampler.</p>
+            </div>
+
+            <div class="text-block">
+                <p>Open this page on your desktop browser to use D1 with your DAW.</p>
+            </div>
+            
+        </div>
+	</div>
 </body>
 
 </html>

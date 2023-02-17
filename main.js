@@ -14,7 +14,8 @@ window.preload = function () {
 }
 
 window.setup = function () {
-    createCanvas(windowWidth, windowHeight)
+    canvas = createCanvas(windowWidth, windowHeight)
+    canvas.parent('canvas-div');
 
     WebMidi
         .enable()

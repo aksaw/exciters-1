@@ -15,6 +15,7 @@
 }
 
 body {
+    background-color: black;
     margin: 0;
     padding: 0;
     user-select: none;
@@ -137,7 +138,7 @@ nav {
 
 #midiout-select {
     font-family: 'Surt Expanded Regular';
-    background: transparent;
+    background-color: black;
     color: #898989;
     padding: 18px;
     border-radius: 4px; 
@@ -197,3 +198,65 @@ a:hover {
     color: black
 }
 
+/* Show appropriate content based on screen size */
+.mobile-display {
+    display: none
+}
+
+.desktop-display {
+    display: block
+}
+
+@media (max-width:1050px) {
+    .desktop-display {
+        display: none
+    }
+
+    .mobile-display {
+        display: block;
+        color: white
+    }
+
+    body {
+        background: black;
+        overflow: auto;
+    }
+
+    #content {
+        margin: auto;
+        padding-bottom: 48px;
+    }
+
+    #title {
+        width: 80%;
+        margin: auto;
+        margin-top: 64px;
+    }
+
+    #title img {
+        width: 100%;
+    }
+
+    .text-block {
+        width: 80%;
+        margin: auto;
+    }
+
+    .video {
+        width: 90%;
+        overflow: hidden;
+        margin: 36px auto;
+        border: 1px solid white;
+    }
+
+    .video video {
+        width: 100%;
+    }
+
+    p {
+        font-family: 'Surt Expanded Regular';
+        color: white;
+        font-size: 16px;
+        line-height: 1.5rem;
+    }
+}
