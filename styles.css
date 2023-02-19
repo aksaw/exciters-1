@@ -307,13 +307,15 @@ a:hover {
     #mc_embed_signup form {
         margin: 0px;
     }
-
+    
     #mce-EMAIL {
+        width: 100%;
         height: 36px;
         margin-bottom: 12px;
         font-family: 'Surt Expanded Regular';
         font-size: 16px;
-
+        background-color: white !important;
+        color: black !important;
     }
 
     .mce_inline_error {
