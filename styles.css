@@ -14,6 +14,23 @@
     src: url('assets/Surt-Expanded-Regular.woff') format("woff");
 }
 
+a {
+    color: white;
+}
+
+a:visited {
+    color: white;
+}
+
+a:hover {
+    color: white;
+}
+
+a:active {
+    color: white;
+}
+
+
 body {
     background-color: black;
     margin: 0;
