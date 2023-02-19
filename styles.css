@@ -260,4 +260,74 @@ a:hover {
         font-size: 16px;
         line-height: 1.5rem;
     }
+    
+    #mc-embedded-subscribe {
+        width: 100% !important;
+        height: 48px !important;
+        background-color: black !important;
+        color: white !important;
+        font-family: 'Surt Expanded Regular';
+        border: 1px solid white !important;
+        margin: 0 auto !important;
+    }
+
+    #mc-embedded-subscribe:hover {
+        background-color: white !important;
+        color: black !important;
+    }
+
+    #mc_embed_signup {
+        background-color: black;
+        color: white;
+        font-family: 'Surt Expanded Regular';
+        width: 80%;
+        margin: 0 auto
+    }
+
+    #mc_embed_signup form {
+        margin: 0px;
+    }
+
+    #mce-EMAIL {
+        height: 48px;
+        margin-bottom: 12px;
+        font-family: 'Surt Expanded Regular';
+        font-size: 16px;
+
+    }
+
+    .mce_inline_error {
+        background-color: black !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        padding-left: 8px !important;
+    }
+
+    .response {
+        display: block;
+        width: 100%;
+        padding-top: 0px !important;
+        margin-top: 0px !important;
+        /* margin: 0 auto; */
+        text-align: left !important;
+        margin-bottom: 24px !important;
+        font-size: 13px;
+    }
+
+    #mce-responses {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    #mc_embed_signup div.response {
+        width: 100% !important;
+    }
+
+    #mc_embed_signup .button {
+        font-size: 16px !important;
+    }
+
+    .mc-field-group {
+        padding-bottom: 0px !important;
+    }
 }
