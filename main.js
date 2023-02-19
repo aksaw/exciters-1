@@ -242,13 +242,15 @@ document.getElementById('worlds').onchange = function () {
     world.play()
 };
 
-// document.getElementById('midiout-select').onchange = function () {
-//     // if (this.value = '') {
-//     //     worlds.
-//     // }
-//     worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = this.value
-//     worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = this.value
-//     worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = this.value
-    
-// };
+document.getElementById('midiout-select').onchange = function () {
+    if (this.value != '') {
+        mixpanel.track('midiout-select');
+        worlds.attractors.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+        worlds.exciters.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+        worlds.barcode.worldContext.getMutableComponent(MidiContextComponent).output = this.value
+    }
+};
 
+document.getElementById('tooltip').onclick= function () {
+    mixpanel.track('tooltip-click');
+};
