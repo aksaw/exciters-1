@@ -18,12 +18,17 @@
             }
         })(document, window.mixpanel || []);
 
-        // Enabling the debug mode flag is useful during implementation,
-        // but it's recommended you remove it for production
-        mixpanel.init('cc871860db49f6d78ef6fa906b7e2823', { debug: true });
+        mixpanel.init('cc871860db49f6d78ef6fa906b7e2823', { debug: false });
         mixpanel.track('page-view');
     </script>
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDYCP4Y478"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-WDYCP4Y478');
+    </script>
 </head>
 <body>
 	<div class="desktop-display" id="canvas-div">
