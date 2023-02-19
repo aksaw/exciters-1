@@ -286,6 +286,7 @@ a:hover {
         font-family: 'Surt Expanded Regular';
         border: 1px solid white !important;
         margin: 0 auto !important;
+        -webkit-appearance: none !important;
     }
 
     #mc-embedded-subscribe:hover {
