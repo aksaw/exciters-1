@@ -251,6 +251,7 @@ a:hover {
 
     .video video {
         width: 100%;
+        vertical-align: top;
     }
 
     p {
