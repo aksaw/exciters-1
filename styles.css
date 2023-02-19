@@ -280,13 +280,15 @@ a:hover {
     
     #mc-embedded-subscribe {
         width: 100% !important;
-        height: 48px !important;
+        height: 56px !important;
         background-color: black !important;
         color: white !important;
         font-family: 'Surt Expanded Regular';
         border: 1px solid white !important;
         margin: 0 auto !important;
         -webkit-appearance: none !important;
+        font-size: 16px;
+        
     }
 
     #mc-embedded-subscribe:hover {
